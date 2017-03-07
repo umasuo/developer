@@ -3,6 +3,7 @@ package com.umasuo.developer.domain.service;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.infrastructure.repository.DeveloperRepository;
 import com.umasuo.developer.infrastructure.util.PasswordUtil;
+import com.umasuo.exception.AlreadyExistException;
 import com.umasuo.exception.NotExistException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,11 @@ public class DeveloperService {
    */
   public Developer create(String email, String password) {
     logger.debug("CreateDeveloper: email:{}", email);
-    Developer developer = new Developer();
+    Developer developer = this.repository.findOneByEmail(email);
+    if(developer!=null){
+      throw new AlreadyExistException("Developer already existing.");
+    }
+    developer = new Developer();
     developer.setEmail(email);
 
     String encryptedPwd = PasswordUtil.hashPassword(password);

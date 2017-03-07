@@ -20,9 +20,9 @@ import javax.servlet.http.HttpServletResponse;
  * Created by umasuo on 17/3/2.
  */
 @Component
-public class AuthExceptionHandler implements ExceptionHandler, HandlerExceptionResolver {
+public class DeveloperExceptionHandler implements ExceptionHandler, HandlerExceptionResolver {
 
-  private static Logger logger = LoggerFactory.getLogger(AuthExceptionHandler.class);
+  private static Logger logger = LoggerFactory.getLogger(DeveloperExceptionHandler.class);
 
   @Override
   public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
