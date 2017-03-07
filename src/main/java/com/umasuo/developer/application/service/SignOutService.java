@@ -5,7 +5,7 @@ import com.umasuo.authentication.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -25,7 +25,7 @@ public class SignOutService {
    * redis ops. cache cluster should be used.
    */
   @Autowired
-  private transient RedisOperations redisOperations;
+  private transient RedisTemplate redisTemplate;
 
   /**
    * JWT(json web token) update
@@ -57,6 +57,6 @@ public class SignOutService {
     String id = token.getSubjectId();
     Assert.notNull(id);
 
-    redisOperations.delete(id);
+    redisTemplate.delete(id);
   }
 }

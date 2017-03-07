@@ -3,14 +3,17 @@ package com.umasuo.developer.domain.service;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.infrastructure.repository.DeveloperRepository;
 import com.umasuo.developer.infrastructure.util.PasswordUtil;
+import com.umasuo.exception.NotExistException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 /**
  * Created by umasuo on 17/3/6.
  */
+@Service
 public class DeveloperService {
 
   /**
@@ -73,7 +76,11 @@ public class DeveloperService {
    */
   public Developer getWithEmail(String email) {
     logger.debug("GetDeveloper: email: {}", email);
-    return this.repository.findOneByEmail(email);
+    Developer developer = this.repository.findOneByEmail(email);
+    if (developer == null) {
+      throw new NotExistException("Developer not exist.");
+    }
+    return developer;
   }
 
 

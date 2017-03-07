@@ -20,15 +20,13 @@ public class SignUpService {
   private final static Logger LOGGER = LoggerFactory.getLogger(SignUpService.class);
 
   @Autowired
-  DeveloperService developerService;
+  private transient DeveloperService developerService;
 
-  public String SignUpService(String email, String password) {
+  public void signUp(String email, String password) {
     LOGGER.debug("SignUp: email: {}", email);
 
     Developer developer = developerService.create(email, password);
     Assert.notNull(developer);
-
-    return null;
   }
 
 }

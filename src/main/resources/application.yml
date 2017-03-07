@@ -6,6 +6,17 @@ logging:
     com.netflix.discovery: 'OFF'
     org.springframework.cloud: 'DEBUG'
 
+
 spring:
   application:
     name: developer
+  datasource:
+    url: jdbc:postgresql://localhost:5432/eva
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: com.umasuo.database.dialect.JSONBPostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update

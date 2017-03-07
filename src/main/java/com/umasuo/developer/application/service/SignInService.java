@@ -13,10 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by umasuo on 17/3/6.
@@ -25,11 +25,10 @@ import java.util.List;
 @Service
 public class SignInService {
 
-
   /**
    * logger.
    */
-  private final static Logger LOGGER = LoggerFactory.getLogger(SignInService.class);
+  private final static Logger logger = LoggerFactory.getLogger(SignInService.class);
 
   /**
    * the key in map which in cache.
@@ -58,7 +57,7 @@ public class SignInService {
    * redis ops.
    */
   @Autowired
-  private transient RedisOperations redisOperations;
+  private transient RedisTemplate redisTemplate;
 
   /**
    * login with email and password.
@@ -68,7 +67,7 @@ public class SignInService {
    * @return LoginResult
    */
   public SignInResult signInWithEmail(String email, String password) {
-    LOGGER.debug("SignInWithEmail: email: {}", email);
+    logger.debug("SignInWithEmail: email: {}", email);
     Developer developer = developerService.getWithEmail(email);
 
     Boolean pwdResult = PasswordUtil.checkPassword(password, developer.getPassword());
@@ -77,14 +76,14 @@ public class SignInService {
     }
 
     //TODO add scope
-    String token = jwtUtil.generateToken(TokenType.ADMIN, developer.getId(), jwtUtil.getExpiresIn
-        (), new ArrayList<>());
+    String token = jwtUtil.generateToken(TokenType.ADMIN, developer.getId(), jwtUtil.getExpiresIn(),
+        new ArrayList<>());
 
     SignInResult result = new SignInResult(DeveloperMapper.modelToView(developer), token);
 
     cacheSignInStatus(developer.getId(), token);
 
-    LOGGER.debug("SignInWithEmail: result: {}", result);
+    logger.debug("SignInWithEmail: result: {}", result);
     return result;
   }
 
@@ -99,6 +98,6 @@ public class SignInService {
   private void cacheSignInStatus(String id, String tokenString) {
     Token token = jwtUtil.parseToken(tokenString);
     //cache the result
-    redisOperations.boundHashOps(id).put(SIGN_IN_CACHE_KEY, token);
+    redisTemplate.boundHashOps(id).put(SIGN_IN_CACHE_KEY, token);
   }
 }
