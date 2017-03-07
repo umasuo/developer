@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 /**
@@ -19,6 +20,7 @@ public class SignIn {
    * email.
    */
   @Email
+  @NotNull
   private String email;
 
   /**
@@ -30,6 +32,7 @@ public class SignIn {
    * $                 # end-of-string
    */
   @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,}$")
+  @NotNull
   private String password;
 
   @Override
