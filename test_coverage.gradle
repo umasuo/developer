@@ -9,8 +9,8 @@ apply plugin: 'com.palantir.jacoco-coverage'
 
 jacocoCoverage { // Enforce minimum code coverage of 80% for every Java file.
     // Minimum 'branch' coverage of 80% for all files.
-    fileThreshold 0.1, BRANCH
-    fileThreshold 0.1, METHOD
+    fileThreshold 0.0, BRANCH
+    fileThreshold 0.0, METHOD
 }
 
 //exclude the folders we do not want to check
