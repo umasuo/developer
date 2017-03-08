@@ -1,4 +1,4 @@
-package com.umasuo.developer.domain.exception;
+package com.umasuo.developer.infrastructure.exception;
 
 /**
  * Created by umasuo on 17/3/7.

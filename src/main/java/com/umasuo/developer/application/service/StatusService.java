@@ -3,13 +3,11 @@ package com.umasuo.developer.application.service;
 import com.umasuo.authentication.JwtUtil;
 import com.umasuo.authentication.Scope;
 import com.umasuo.authentication.Token;
-import com.umasuo.developer.domain.exception.NotSignInException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import java.util.List;
 
