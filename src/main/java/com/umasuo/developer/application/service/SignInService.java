@@ -48,12 +48,6 @@ public class SignInService {
   private transient DeveloperService developerService;
 
   /**
-   * default config.
-   */
-  public SignInService() {
-  }
-
-  /**
    * redis ops.
    */
   @Autowired
@@ -70,7 +64,7 @@ public class SignInService {
     logger.debug("SignInWithEmail: email: {}", email);
     Developer developer = developerService.getWithEmail(email);
 
-    Boolean pwdResult = PasswordUtil.checkPassword(password, developer.getPassword());
+    boolean pwdResult = PasswordUtil.checkPassword(password, developer.getPassword());
     if (!pwdResult) {
       throw new PasswordErrorException("password or email not correct.");
     }

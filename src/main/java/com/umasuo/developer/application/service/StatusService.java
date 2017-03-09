@@ -20,7 +20,7 @@ public class StatusService {
   /**
    * logger.
    */
-  private final static Logger LOGGER = LoggerFactory.getLogger(StatusService.class);
+  private final static Logger logger = LoggerFactory.getLogger(StatusService.class);
 
   /**
    * redis ops. cache cluster should be used.
@@ -41,8 +41,8 @@ public class StatusService {
    * @param id
    * @return boolean
    */
-  public boolean checkLoginStatus(String id) {
-    LOGGER.debug("CheckLoginStatus: id: {}", id);
+  public boolean checkSignInStatus(String id) {
+    logger.debug("CheckSignInStatus: id: {}", id);
 
     Token token = (Token) redisTemplate.opsForHash().get(id, SignInService.SIGN_IN_CACHE_KEY);
     if (token == null) {

@@ -39,7 +39,7 @@ public class StatusController {
   public boolean getLoginStatus(@RequestParam @Valid @NotNull String id) {
     logger.info("SignInStatus: id: {}", id);
 
-    boolean status = statusService.checkLoginStatus(id);
+    boolean status = statusService.checkSignInStatus(id);
 
     logger.info("SignInStatus: id: {}, status: {}", id, status);
     return status;
