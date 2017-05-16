@@ -1,0 +1,4 @@
+jar {
+    baseName = 'developer'
+    version = '0.0.1'
+}
