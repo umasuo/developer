@@ -1,6 +1,5 @@
 package com.umasuo.developer.application.dto;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
