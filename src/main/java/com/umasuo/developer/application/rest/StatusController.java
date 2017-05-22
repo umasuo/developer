@@ -43,6 +43,6 @@ public class StatusController {
 
     logger.info("SignInStatus: id: {}, status: {}", id, status);
     return status;
-
   }
+
 }
