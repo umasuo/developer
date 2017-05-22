@@ -1,5 +1,6 @@
 package com.umasuo.developer.domain.model;
 
+import com.umasuo.developer.infrastructure.enums.AccountStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
@@ -66,8 +67,9 @@ public class Developer {
 
   /**
    * developer status: unverified, verified, disabled.
+   * 当disabled之后，该用户所发售的设备将不再能够接入云端，此操作需要做几步验证。
    */
-  private short status;
+  private AccountStatus status;
 
   // TODO add company info. for verification.
   //private String company;

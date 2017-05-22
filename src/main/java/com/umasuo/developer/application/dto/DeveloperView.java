@@ -1,5 +1,6 @@
 package com.umasuo.developer.application.dto;
 
+import com.umasuo.developer.infrastructure.enums.AccountStatus;
 import lombok.Data;
 
 import java.time.ZonedDateTime;
@@ -40,5 +41,5 @@ public class DeveloperView {
   /**
    * developer status: unverified, verified, disabled.
    */
-  private short status;
+  private AccountStatus status;
 }

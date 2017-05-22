@@ -36,7 +36,7 @@ public class StatusController {
    * @return
    */
   @GetMapping(value = Router.DEVELOPER_SIGN_IN_STATUS)
-  public boolean getLoginStatus(@RequestParam @Valid @NotNull String id) {
+  public boolean getLoginStatus(@RequestParam @Valid @NotNull String id, @RequestParam @Valid @NotNull String token) {
     logger.info("SignInStatus: id: {}", id);
 
     boolean status = statusService.checkSignInStatus(id);

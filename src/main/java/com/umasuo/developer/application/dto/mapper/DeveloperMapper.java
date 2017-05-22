@@ -1,4 +1,4 @@
-package com.umasuo.developer.application.dto.map;
+package com.umasuo.developer.application.dto.mapper;
 
 import com.umasuo.developer.application.dto.DeveloperView;
 import com.umasuo.developer.domain.model.Developer;
