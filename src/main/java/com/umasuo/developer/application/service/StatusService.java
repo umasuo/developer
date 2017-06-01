@@ -3,6 +3,8 @@ package com.umasuo.developer.application.service;
 import com.umasuo.authentication.JwtUtil;
 import com.umasuo.authentication.Scope;
 import com.umasuo.authentication.Token;
+import com.umasuo.developer.application.dto.AuthStatus;
+import com.umasuo.developer.infrastructure.configuration.AppConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,27 +37,48 @@ public class StatusService {
   private transient JwtUtil jwtUtil;
 
   /**
-   * check login status. for auth check.
-   * this can only be accessed in internal net work.
-   *
-   * @param id
-   * @return boolean
+   * JWT(json web token) update
    */
-  public boolean checkSignInStatus(String id) {
+  @Autowired
+  private transient AppConfig config;
+
+  /**
+   * 检查用户的权限状态。
+   * 1，检查ID与token中的ID是否一致
+   * 2，检查用户是否登陆
+   * 3，登陆是否在有效期内
+   * @param id 开发者ID
+   * @param tokenStr 传入的token string
+   * @return 权限状态
+   */
+  public AuthStatus checkAuthStatus(String id, String tokenStr) {
     logger.debug("CheckSignInStatus: id: {}", id);
+    AuthStatus authStatus = new AuthStatus();
+
+    Token tokenInput = JwtUtil.parseToken(config.getSecret(), tokenStr);
+    if (!tokenInput.getSubjectId().equals(id)) {
+      //检查传入的token是否属于该开发者
+      authStatus.setLogin(false);
+      return authStatus;
+    }
+    authStatus.setDeveloperId(id);
 
     Token token = (Token) redisTemplate.opsForHash().get(id, SignInService.SIGN_IN_CACHE_KEY);
     if (token == null) {
-      return false;
+      authStatus.setLogin(false);
+      return authStatus;
     }
 
     //todo be careful, keep all machine in the same.
     long lifeTime = token.getGenerateTime() + token.getExpiresIn();
     long curTime = System.currentTimeMillis();
     if (curTime > lifeTime) {
-      return false;
+      authStatus.setLogin(false);
+      return authStatus;
     }
-    return true;
+    authStatus.setLogin(false);
+
+    return authStatus;
   }
 
   /**

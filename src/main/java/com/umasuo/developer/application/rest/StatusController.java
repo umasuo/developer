@@ -1,5 +1,6 @@
 package com.umasuo.developer.application.rest;
 
+import com.umasuo.developer.application.dto.AuthStatus;
 import com.umasuo.developer.application.service.StatusService;
 import com.umasuo.developer.infrastructure.Router;
 import org.slf4j.Logger;
@@ -29,20 +30,20 @@ public class StatusController {
   private transient StatusService statusService;
 
   /**
-   * get sign in status.
-   * used by other services.
+   * 检查开发者权限：是否已经登陆，是否拥有相应权限，token与ID是否对应等
    *
-   * @param id
-   * @return
+   * @param id    开发者ID
+   * @param token token string
+   * @return Auth Status
    */
   @GetMapping(value = Router.DEVELOPER_SIGN_IN_STATUS)
-  public boolean getLoginStatus(@RequestParam @Valid @NotNull String id, @RequestParam @Valid @NotNull String token) {
-    logger.info("SignInStatus: id: {}", id);
+  public AuthStatus getAuthStatus(@RequestParam @Valid @NotNull String id, @RequestParam @Valid
+  @NotNull String token) {
+    logger.info("SignInStatus: id: {}, tokenStr: {}.", id,token);
 
-    boolean status = statusService.checkSignInStatus(id);
+    AuthStatus status = statusService.checkAuthStatus(id, token);
 
-    logger.info("SignInStatus: id: {}, status: {}", id, status);
+    logger.info("SignInStatus: authStatus: {}", status);
     return status;
   }
-
 }
