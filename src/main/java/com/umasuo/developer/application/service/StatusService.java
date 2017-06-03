@@ -76,7 +76,7 @@ public class StatusService {
       authStatus.setLogin(false);
       return authStatus;
     }
-    authStatus.setLogin(false);
+    authStatus.setLogin(true);
 
     return authStatus;
   }

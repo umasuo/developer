@@ -39,8 +39,6 @@ public class SignUpController {
     logger.info("SignUp: {}", signUp);
 
     signUpService.signUp(signUp.getEmail(), signUp.getPassword());
-
-    return;
   }
 
 }
