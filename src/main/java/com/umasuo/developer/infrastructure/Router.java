@@ -30,4 +30,14 @@ public class Router {
    */
   public static final String DEVELOPER_SIGN_UP = DEVELOPER_ROOT + "/signup";
 
+  /**
+   * Id.
+   */
+  public static final String ID = "id";
+
+  /**
+   * Developer with id.
+   */
+  public static final String DEVELOPER_WITH_ID = DEVELOPER_ROOT + "/{" + ID + "}";
+
 }
