@@ -1,9 +1,12 @@
 package com.umasuo.developer.domain.service;
 
+import com.umasuo.developer.application.dto.DeveloperView;
+import com.umasuo.developer.application.dto.mapper.DeveloperMapper;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.infrastructure.enums.AccountStatus;
 import com.umasuo.developer.infrastructure.repository.DeveloperRepository;
 import com.umasuo.developer.infrastructure.util.PasswordUtil;
+import com.umasuo.developer.infrastructure.validator.VersionValidator;
 import com.umasuo.exception.AlreadyExistException;
 import com.umasuo.exception.NotExistException;
 import org.slf4j.Logger;
@@ -11,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
+import java.util.List;
 
 /**
  * Created by umasuo on 17/3/6.
@@ -34,7 +39,7 @@ public class DeveloperService {
    * create a developer from an sample.
    *
    * @param developer the sample
-   * @return result.
+   * @return result. developer
    */
   public Developer create(Developer developer) {
     logger.debug("CreateDeveloper: {}", developer);
@@ -44,7 +49,7 @@ public class DeveloperService {
   /**
    * create a developer with email & password.
    *
-   * @param email    email
+   * @param email email
    * @param password raw password.
    * @return created developer
    */
@@ -78,8 +83,8 @@ public class DeveloperService {
   /**
    * get one developer with it's email.
    *
-   * @param email
-   * @return
+   * @param email the email
+   * @return with email
    */
   public Developer getWithEmail(String email) {
     logger.debug("GetDeveloper: email: {}", email);
@@ -94,11 +99,11 @@ public class DeveloperService {
   /**
    * change password.
    *
-   * @param id      developer id.
+   * @param id developer id.
    * @param version current version
-   * @param oldPwd  old password
-   * @param newPwd  new password
-   * @return
+   * @param oldPwd old password
+   * @param newPwd new password
+   * @return developer
    */
   public Developer changePassword(String id, Integer version, String oldPwd, String newPwd) {
     Developer developer = this.get(id);
@@ -137,5 +142,45 @@ public class DeveloperService {
     // reset the password
   }
 
+  /**
+   * Get open developers.
+   *
+   * @return list of DeveloperView
+   */
+  public List<DeveloperView> getOpenDeveloper() {
+    logger.debug("Enter.");
 
+    List<Developer> openDevelopers = repository.findByOpenable(true);
+
+    List<DeveloperView> result = DeveloperMapper.toModel(openDevelopers);
+
+    logger.debug("Exit. open developer size: {}.", result.size());
+
+    return result;
+  }
+
+  /**
+   * Update developer open status.
+   *
+   * @param id the id
+   * @param version the version
+   * @param openable the openable
+   * @return the developer view
+   */
+  public DeveloperView updateOpenStatus(String id, Integer version, Boolean openable) {
+    logger.debug("Enter. developerId: {}, version: {}, openable: {}.", id, version, openable);
+
+    Developer developer = repository.findOne(id);
+    VersionValidator.validate(developer.getVersion(), version);
+
+    developer.setOpenable(openable);
+
+    Developer updatedDeveloper = repository.save(developer);
+
+    DeveloperView result = DeveloperMapper.toModel(updatedDeveloper);
+
+    logger.trace("Updated developer: {}.", result);
+    logger.debug("Exit.");
+    return result;
+  }
 }

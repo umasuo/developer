@@ -71,7 +71,7 @@ public class SignInService {
     String token = jwtUtil.generateToken(TokenType.DEVELOPER, developer.getId(), jwtUtil.getExpiresIn(),
         new ArrayList<>());
 
-    SignInResult result = new SignInResult(DeveloperMapper.modelToView(developer), token);
+    SignInResult result = new SignInResult(DeveloperMapper.toModel(developer), token);
 
     cacheSignInStatus(developer.getId(), token);
 

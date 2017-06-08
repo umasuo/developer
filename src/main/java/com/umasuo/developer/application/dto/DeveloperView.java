@@ -42,4 +42,9 @@ public class DeveloperView {
    * developer status: unverified, verified, disabled.
    */
   private AccountStatus status;
+
+  /**
+   * The Openable.
+   */
+  private Boolean openable;
 }

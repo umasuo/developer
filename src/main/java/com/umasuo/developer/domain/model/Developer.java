@@ -79,6 +79,12 @@ public class Developer {
   // TODO add company info. for verification.
   //private String company;
 
+  /**
+   * Openable means other developer can find this developer or not.
+   * If true, this developer can be read by
+   */
+  private Boolean openable = false;
+
 
   @Override
   public String toString() {
@@ -89,6 +95,7 @@ public class Developer {
         + ", version=" + version
         + ", email='" + email + '\''
         + ", phone='" + phone + '\''
+        + ", openable='" + openable + '\''
         + '}';
   }
 }
