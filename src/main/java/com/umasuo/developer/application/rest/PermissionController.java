@@ -50,11 +50,14 @@ public class PermissionController {
   /**
    * Request user permission.
    *
-   * @param developerId the developer id
+   * @param userId the user id
    * @param request the request
    */
-  public void requestUserPermission(@RequestHeader String developerId, PermissionRequest request) {
-    // 1. 查看developer是否有对应permission
-    // 2. 请求转发到user service
+  public void requestUserPermission(@RequestHeader String userId, PermissionRequest request) {
+    LOG.info("Enter. userId: {}, request: {}.", userId, request);
+
+    permissionApplication.handleUserPermissionRequest(userId, request);
+
+    LOG.info("Exit.");
   }
 }

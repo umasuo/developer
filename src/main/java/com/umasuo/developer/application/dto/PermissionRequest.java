@@ -15,9 +15,14 @@ import java.util.List;
 public class PermissionRequest {
 
   /**
-   * The user id from applicant.
+   * The applicant developer.
    */
-  private String userId;
+  private String applicantId;
+
+  /**
+   * The Acceptor id.
+   */
+  private String acceptorId;
 
   /**
    * The Device definition id.
