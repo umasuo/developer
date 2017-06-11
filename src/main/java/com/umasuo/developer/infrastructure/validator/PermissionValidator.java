@@ -40,7 +40,7 @@ public final class PermissionValidator {
 
     Consumer<ResourcePermission> consumer = permission -> {
       if (permission.getDeviceDefinitionId().equals(request.getDeviceDefinitionId()) &&
-          permission.getReferences().containsAll(request.getReferences())){
+          permission.getReferences().containsAll(request.getReferences())) {
         reference.set(true);
       }
     };

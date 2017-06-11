@@ -40,8 +40,8 @@ public class PermissionController {
       String acceptorId) {
     LOG.info("Enter. applicantId: {}, acceptorId: {}.", developerId, acceptorId);
 
-    List<ResourcePermissionView> result = permissionApplication
-        .findForApplicant(developerId, acceptorId);
+    List<ResourcePermissionView> result =
+        permissionApplication.findForApplicant(developerId, acceptorId);
 
     LOG.info("Exit. permission size: {}.", result.size());
 
