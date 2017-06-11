@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public class DeveloperService {
   /**
    * create a developer with email & password.
    *
-   * @param email email
+   * @param email    email
    * @param password raw password.
    * @return created developer
    */
@@ -62,6 +63,7 @@ public class DeveloperService {
     developer = new Developer();
     developer.setEmail(email);
     developer.setStatus(AccountStatus.UNVERIFIED);
+    developer.setOpenable(false);//默认不公开任何数据
 
     String encryptedPwd = PasswordUtil.hashPassword(password);
     developer.setPassword(encryptedPwd);
@@ -99,10 +101,10 @@ public class DeveloperService {
   /**
    * change password.
    *
-   * @param id developer id.
+   * @param id      developer id.
    * @param version current version
-   * @param oldPwd old password
-   * @param newPwd new password
+   * @param oldPwd  old password
+   * @param newPwd  new password
    * @return developer
    */
   public Developer changePassword(String id, Integer version, String oldPwd, String newPwd) {
@@ -162,11 +164,12 @@ public class DeveloperService {
   /**
    * Update developer open status.
    *
-   * @param id the id
-   * @param version the version
+   * @param id       the id
+   * @param version  the version
    * @param openable the openable
    * @return the developer view
    */
+  @Transactional
   public DeveloperView updateOpenStatus(String id, Integer version, Boolean openable) {
     logger.debug("Enter. developerId: {}, version: {}, openable: {}.", id, version, openable);
 
