@@ -1,9 +1,7 @@
 package com.umasuo.developer.application.service;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.umasuo.developer.application.dto.ResourceRequestView;
 import com.umasuo.developer.application.dto.ResourceRequestDraft;
+import com.umasuo.developer.application.dto.ResourceRequestView;
 import com.umasuo.developer.application.dto.mapper.ResourcePermissionMapper;
 import com.umasuo.developer.application.dto.mapper.ResourceRequestMapper;
 import com.umasuo.developer.domain.model.ResourcePermission;
@@ -11,6 +9,8 @@ import com.umasuo.developer.domain.model.ResourceRequest;
 import com.umasuo.developer.domain.service.ResourcePermissionService;
 import com.umasuo.developer.domain.service.ResourceRequestService;
 import com.umasuo.developer.infrastructure.enums.ReplyRequest;
+import com.umasuo.developer.infrastructure.validator.ExistRequestValidator;
+import com.umasuo.developer.infrastructure.validator.FeedBackValidator;
 import com.umasuo.exception.AuthFailedException;
 import com.umasuo.exception.NotExistException;
 
@@ -20,10 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * ResourceRequest application.
@@ -140,28 +137,7 @@ public class ResourceRequestApplication {
   }
 
   /**
-   * Handle reply.
-   *
-   * @param request the ResourceRequest
-   * @param reply the ReplyRequest
-   */
-  private void handlerReply(ResourceRequest request, ReplyRequest reply) {
-        request.setReplyRequest(reply);
-    switch (reply) {
-      case AGREE:
-        ResourcePermission permission = ResourcePermissionMapper.build(request);
-        resourcePermissionServce.save(permission);
-        break;
-      case DISAGREE:
-        // TODO: 17/6/9 取消权限，需要把permission删除，并把对应的user权限也删除
-        break;
-      default:
-        break;
-    }
-  }
-
-  /**
-   * Feed back for applicant list.
+   * Feed back for applicant.
    *
    * @param developerId the developer id
    * @param requestId the request id
@@ -172,8 +148,8 @@ public class ResourceRequestApplication {
     LOG.debug("Enter. developerId: {}, requestId: {}.", developerId, requestId);
 
     List<ResourceRequest> requests = resourceRequestService.findAll(requestId);
-    validateNotExitRequest(requestId, requests);
-    validateFeedBackAuth(developerId, requests);
+    ExistRequestValidator.validate(requestId, requests);
+    FeedBackValidator.validateApplicantFeedBackAuth(developerId, requests);
 
     Consumer<ResourceRequest> feedBackConsumer = request -> request.setApplicantViewed(true);
     requests.stream().forEach(feedBackConsumer);
@@ -187,47 +163,48 @@ public class ResourceRequestApplication {
   }
 
   /**
-   * Check if the developer have authentication to feedback those request.
-   * @param developerId developer id
-   * @param requests ResourceRequest found from database
+   * Feed back for acceptor.
+   *
+   * @param developerId the developer id
+   * @param requestId the request id
+   * @return the list
    */
-  private void validateFeedBackAuth(String developerId, List<ResourceRequest> requests) {
-    // 检查开发者是否有权限反馈
-    Map<String, String> developerRequestMap = Maps.newHashMap();
-    Consumer<ResourceRequest> consumer =
-        request -> developerRequestMap.put(request.getId(), request.getApplicantId());
-    requests.stream().forEach(consumer);
+  public List<ResourceRequestView> feedBackForAcceptor(String developerId,
+      List<String> requestId) {
+    LOG.debug("Enter. developerId: {}, requestId: {}.", developerId, requestId);
 
-    List<String> notAuthDevelopers = Lists.newArrayList();
-    Consumer<Entry<String, String>> entryConsumer = entry -> {
-      if (!entry.getValue().equals(developerId)) {
-        notAuthDevelopers.add(entry.getKey());
-      }
-    };
-    developerRequestMap.entrySet().stream().forEach(entryConsumer);
+    List<ResourceRequest> requests = resourceRequestService.findAll(requestId);
+    ExistRequestValidator.validate(requestId, requests);
+    FeedBackValidator.validateAcceptorFeedBackAuth(developerId, requests);
 
-    if (notAuthDevelopers.size() > 0) {
-      LOG.debug("Developer: {} do not have auth to feedback request: {}.", developerId,
-          notAuthDevelopers);
-      throw new AuthFailedException("Developer do not have authorization to feedback request");
-    }
+    Consumer<ResourceRequest> feedBackConsumer =
+        request -> request.setReplyRequest(ReplyRequest.VIEWED);
+    requests.stream().forEach(feedBackConsumer);
+    List<ResourceRequest> feedBackedRequests = resourceRequestService.saveAll(requests);
+
+    List<ResourceRequestView> result = ResourceRequestMapper.toModel(feedBackedRequests);
+
+    LOG.debug("Exit. feedback size: {}.", result.size());
+
+    return result;
   }
 
   /**
-   * Check if the request exist.
+   * Handle reply.
    *
-   * @param requestId the ResourceRequest id list
-   * @param requests the ResourceRequest found from database by the id list
+   * @param request the ResourceRequest
+   * @param reply the ReplyRequest
    */
-  private void validateNotExitRequest(List<String> requestId, List<ResourceRequest> requests) {
-    // 检查要反馈的请求是否存在
-    List<String> existRequestId =
-        requests.stream().map(ResourceRequest::getId).collect(Collectors.toList());
-
-    requestId.removeAll(existRequestId);
-    if (requestId.size() > 0) {
-      LOG.debug("Request: {} not exist.", requestId);
-      throw new NotExistException("Request not exist: " + requestId);
+  private void handlerReply(ResourceRequest request, ReplyRequest reply) {
+    request.setReplyRequest(reply);
+    request.setApplicantViewed(false);
+    switch (reply) {
+      case AGREE:
+        ResourcePermission permission = ResourcePermissionMapper.build(request);
+        resourcePermissionServce.save(permission);
+        break;
+      default:
+        break;
     }
   }
 }

@@ -8,7 +8,7 @@ import org.springframework.data.domain.AuditorAware;
 public class ZonedDateTimeAuditorAware implements AuditorAware<String> {
 
   /**
-   * get current auditor.
+   * getAllForApplicant current auditor.
    * @return null.
    */
   @Override

@@ -70,7 +70,7 @@ public class DeveloperService {
   }
 
   /**
-   * get one developer by it's id.
+   * getAllForApplicant one developer by it's id.
    *
    * @param id developer id.
    * @return existing developer.
@@ -81,7 +81,7 @@ public class DeveloperService {
   }
 
   /**
-   * get one developer with it's email.
+   * getAllForApplicant one developer with it's email.
    *
    * @param email the email
    * @return with email
@@ -138,7 +138,7 @@ public class DeveloperService {
    */
   public void resetPassword(String email, String token) {
     //TODO check token
-    //get developer
+    //getAllForApplicant developer
     // reset the password
   }
 

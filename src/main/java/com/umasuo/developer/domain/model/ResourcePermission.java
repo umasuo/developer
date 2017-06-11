@@ -73,11 +73,10 @@ public class ResourcePermission {
    */
   private String acceptorId;
 
-
   /**
    * The Device id.
    */
-  private String deviceId;
+  private String deviceDefinitionId;
 
   /**
    * The References.

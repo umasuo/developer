@@ -30,7 +30,7 @@ public final class ResourceRequestMapper {
   public static ResourceRequest toEntity(String applicantId, ResourceRequestDraft model) {
     ResourceRequest entity = new ResourceRequest();
 
-    entity.setApplicantViewed(false);
+    entity.setApplicantViewed(true);
     entity.setAcceptorId(model.getAcceptorId());
     entity.setDeviceId(model.getDeviceDefinitionId());
     entity.setReferences(model.getReferences());

@@ -77,7 +77,7 @@ public class ResourcePermissionApplication {
     reference.set(false);
 
     Consumer<ResourcePermission> consumer = permission -> {
-      if (permission.getDeviceId().equals(request.getDeviceDefinitionId()) &&
+      if (permission.getDeviceDefinitionId().equals(request.getDeviceDefinitionId()) &&
           permission.getReferences().containsAll(request.getReferences())){
         reference.set(true);
       }

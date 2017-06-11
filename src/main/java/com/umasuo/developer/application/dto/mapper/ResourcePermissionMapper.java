@@ -30,7 +30,7 @@ public final class ResourcePermissionMapper {
 
     entity.setAcceptorId(request.getAcceptorId());
     entity.setApplicantId(request.getApplicantId());
-    entity.setDeviceId(request.getDeviceId());
+    entity.setDeviceDefinitionId(request.getDeviceId());
     entity.setReferences(request.getReferences());
 
     return entity;
@@ -63,7 +63,7 @@ public final class ResourcePermissionMapper {
     model.setId(entity.getId());
     model.setAcceptorId(entity.getAcceptorId());
     model.setApplicantId(entity.getApplicantId());
-    model.setDeviceId(entity.getDeviceId());
+    model.setDeviceId(entity.getDeviceDefinitionId());
     model.setReferences(entity.getReferences());
 
     return model;

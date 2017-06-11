@@ -36,7 +36,7 @@ public class PermissionController {
    * @param acceptorId the acceptor id
    * @return the list
    */
-  public List<ResourcePermissionView> get(@RequestHeader String developerId, String acceptorId) {
+  public List<ResourcePermissionView> getAllForApplicant(@RequestHeader String developerId, String acceptorId) {
     LOG.info("Enter. applicantId: {}, acceptorId: {}.", developerId, acceptorId);
 
     List<ResourcePermissionView> result = permissionApplication
@@ -45,6 +45,11 @@ public class PermissionController {
     LOG.info("Exit. permission size: {}.", result.size());
 
     return result;
+  }
+
+  public List<ResourcePermissionView> getAllForAcceptor(@RequestHeader String developerId) {
+    // TODO: 17/6/11
+    return null;
   }
 
   /**
@@ -59,5 +64,9 @@ public class PermissionController {
     permissionApplication.handleUserPermissionRequest(userId, request);
 
     LOG.info("Exit.");
+  }
+
+  public void delete() {
+    // TODO: 17/6/9 取消权限，需要把permission删除，并把对应的user权限也删除
   }
 }

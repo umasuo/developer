@@ -1,7 +1,7 @@
 package com.umasuo.developer.application.rest;
 
-import com.umasuo.developer.application.dto.ResourceRequestView;
 import com.umasuo.developer.application.dto.ResourceRequestDraft;
+import com.umasuo.developer.application.dto.ResourceRequestView;
 import com.umasuo.developer.application.service.ResourceRequestApplication;
 import com.umasuo.developer.infrastructure.enums.ReplyRequest;
 
@@ -115,6 +115,25 @@ public class RequestController {
 
     List<ResourceRequestView> result = resourceRequestApplication
         .feedBackForApplicant(developerId, requestId);
+
+    LOG.info("Exit. feedBack size: {}.", result.size());
+
+    return result;
+  }
+
+  /**
+   * Acceptor feedback request.
+   *
+   * @param developerId the developer id
+   * @param requestId the request id
+   * @return the list
+   */
+  public List<ResourceRequestView> feedBackForAcceptor(@RequestHeader String developerId,
+      List<String> requestId) {
+    LOG.info("Enter. developerId: {}, requestId: {}.", developerId, requestId);
+
+    List<ResourceRequestView> result = resourceRequestApplication
+        .feedBackForAcceptor(developerId, requestId);
 
     LOG.info("Exit. feedBack size: {}.", result.size());
 

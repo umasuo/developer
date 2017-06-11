@@ -7,5 +7,5 @@ public enum ReplyRequest {
   UNVIEW,
   AGREE,
   DISAGREE,
-  IGNORE
+  VIEWED
 }

@@ -51,7 +51,7 @@ public class DeveloperExceptionHandler implements ExceptionHandler, HandlerExcep
   }
 
   /**
-   * get customized message body by exception type.
+   * getAllForApplicant customized message body by exception type.
    *
    * @param ex exception.
    * @return exception body.
