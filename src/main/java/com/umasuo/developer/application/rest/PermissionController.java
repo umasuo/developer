@@ -36,20 +36,32 @@ public class PermissionController {
    * @param acceptorId the acceptor id
    * @return the list
    */
-  public List<ResourcePermissionView> getAllForApplicant(@RequestHeader String developerId, String acceptorId) {
+  public List<ResourcePermissionView> getAllForApplicant(@RequestHeader String developerId,
+      String acceptorId) {
     LOG.info("Enter. applicantId: {}, acceptorId: {}.", developerId, acceptorId);
 
     List<ResourcePermissionView> result = permissionApplication
-        .findPermission(developerId, acceptorId);
+        .findForApplicant(developerId, acceptorId);
 
     LOG.info("Exit. permission size: {}.", result.size());
 
     return result;
   }
 
+  /**
+   * Gets all permissions for acceptor.
+   *
+   * @param developerId the developer id
+   * @return the all for acceptor
+   */
   public List<ResourcePermissionView> getAllForAcceptor(@RequestHeader String developerId) {
-    // TODO: 17/6/11
-    return null;
+    LOG.info("Enter. acceptorId: {}.", developerId);
+
+    List<ResourcePermissionView> result = permissionApplication.findByAcceptor(developerId);
+
+    LOG.info("Exit. permission size: {}.", result.size());
+
+    return result;
   }
 
   /**
