@@ -30,7 +30,7 @@ public final class ResourcePermissionMapper {
 
     entity.setAcceptorId(request.getAcceptorId());
     entity.setApplicantId(request.getApplicantId());
-    entity.setDeviceDefinitionId(request.getDeviceId());
+    entity.setDeviceDefinitionId(request.getDeviceDefinitionId());
     entity.setReferences(request.getReferences());
 
     return entity;

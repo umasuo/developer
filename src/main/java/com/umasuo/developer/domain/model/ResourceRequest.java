@@ -86,7 +86,7 @@ public class ResourceRequest {
   /**
    * The Device id.
    */
-  private String deviceId;
+  private String deviceDefinitionId;
 
   /**
    * The References.

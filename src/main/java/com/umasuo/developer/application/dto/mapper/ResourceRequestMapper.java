@@ -32,7 +32,7 @@ public final class ResourceRequestMapper {
 
     entity.setApplicantViewed(true);
     entity.setAcceptorId(model.getAcceptorId());
-    entity.setDeviceId(model.getDeviceDefinitionId());
+    entity.setDeviceDefinitionId(model.getDeviceDefinitionId());
     entity.setReferences(model.getReferences());
     entity.setReplyRequest(ReplyRequest.UNVIEW);
     entity.setApplicantId(applicantId);
@@ -54,7 +54,7 @@ public final class ResourceRequestMapper {
     model.setApplicantId(entity.getApplicantId());
     model.setReplyRequest(entity.getReplyRequest());
     model.setReferences(entity.getReferences());
-    model.setDeviceId(entity.getDeviceId());
+    model.setDeviceId(entity.getDeviceDefinitionId());
     model.setAcceptorId(entity.getAcceptorId());
     model.setApplicantViewed(entity.getApplicantViewed());
     model.setCreatedAt(entity.getCreatedAt());

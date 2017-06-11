@@ -37,7 +37,7 @@ public final class ExistRequestValidator {
         requests.stream().map(ResourceRequest::getId).collect(Collectors.toList());
 
     requestId.removeAll(existRequestId);
-    if (requestId.size() > 0) {
+    if (! requestId.isEmpty()) {
       LOG.debug("Request: {} not exist.", requestId);
       throw new NotExistException("Request not exist: " + requestId);
     }
