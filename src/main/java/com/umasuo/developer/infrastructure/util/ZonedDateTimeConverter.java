@@ -24,7 +24,6 @@ public class ZonedDateTimeConverter implements AttributeConverter<ZonedDateTime,
   public ZonedDateTime convertToEntityAttribute(String dbData) {
     ZoneId utcZoneId = ZonedDateTime.now(ZoneOffset.UTC).getZone();
 
-
     ZonedDateTime dateTime =
         ZonedDateTime.ofInstant(ZonedDateTime.parse(dbData).toInstant(), utcZoneId);
 

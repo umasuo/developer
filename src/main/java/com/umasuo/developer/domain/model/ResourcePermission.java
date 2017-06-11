@@ -29,7 +29,7 @@ import javax.persistence.Version;
  */
 @Data
 @Entity
-@Table(name = "resource_request")
+@Table(name = "resource_permission")
 @EntityListeners(AuditingEntityListener.class)
 @TypeDef(name = "List", typeClass = JSONBUserType.class, parameters = {
     @Parameter(name = JSONBUserType.CLASS, value = "java.util.List")}
@@ -81,6 +81,7 @@ public class ResourcePermission {
   /**
    * The References.
    */
+  @Column(name = "data_references")
   @Type(type = "List")
   private List<Reference> references;
 }

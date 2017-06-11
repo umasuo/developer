@@ -1,5 +1,6 @@
 package com.umasuo.developer.application.service;
 
+import com.umasuo.developer.application.dto.DeviceDefinitionView;
 import com.umasuo.developer.application.dto.ResourceRequestDraft;
 import com.umasuo.developer.application.dto.ResourceRequestView;
 import com.umasuo.developer.application.dto.mapper.ResourcePermissionMapper;
@@ -14,6 +15,7 @@ import com.umasuo.developer.infrastructure.validator.FeedBackValidator;
 import com.umasuo.exception.AuthFailedException;
 import com.umasuo.exception.NotExistException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,12 @@ public class ResourceRequestApplication {
    */
   @Autowired
   private ResourcePermissionService resourcePermissionServce;
+
+  /**
+   * The Rest client.
+   */
+  @Autowired
+  private RestClient restClient;
 
   /**
    * Create resource request.
