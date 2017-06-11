@@ -78,7 +78,7 @@ public final class FeedBackValidator {
     };
     developerRequestMap.entrySet().stream().forEach(entryConsumer);
 
-    if (notAuthDevelopers.size() > 0) {
+    if (!notAuthDevelopers.isEmpty()) {
       LOG.debug("Developer: {} do not have auth to feedback request: {}.",
           developerId, notAuthDevelopers);
       throw new AuthFailedException("Developer do not have authorization to feedback request");
