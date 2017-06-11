@@ -2,7 +2,9 @@ package com.umasuo.developer.application.service;
 
 import com.umasuo.developer.application.dto.PermissionRequest;
 import com.umasuo.developer.application.dto.ResourcePermissionView;
+import com.umasuo.developer.application.dto.UserPermissionRequest;
 import com.umasuo.developer.application.dto.mapper.ResourcePermissionMapper;
+import com.umasuo.developer.application.dto.mapper.UserPermissionRequestMapper;
 import com.umasuo.developer.domain.model.ResourcePermission;
 import com.umasuo.developer.domain.service.ResourcePermissionService;
 import com.umasuo.developer.infrastructure.validator.PermissionValidator;
@@ -30,6 +32,12 @@ public class ResourcePermissionApplication {
    */
   @Autowired
   private ResourcePermissionService permissionService;
+
+  /**
+   * The Rest client.
+   */
+  @Autowired
+  private RestClient restClient;
 
   /**
    * Find permission.
@@ -80,8 +88,9 @@ public class ResourcePermissionApplication {
     List<ResourcePermission> permissions = permissionService
         .findForApplicant(request.getApplicantId(), request.getAcceptorId());
     PermissionValidator.validateDeveloper(request, permissions);
-    // TODO: 17/6/9 转发
     // 2. 请求转发到user service
+    UserPermissionRequest permissionRequest = UserPermissionRequestMapper.build(userId, request);
+    restClient.forwardUserRequest(permissionRequest);
 
     LOG.info("Exit.");
   }

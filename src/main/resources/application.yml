@@ -24,3 +24,7 @@ spring:
 jwt:
   secret: QWERTYUIOPASDFGHJKLZXCVBNM
   expires: 72000
+
+user:
+  service:
+    uri: http://localhost:8809/
