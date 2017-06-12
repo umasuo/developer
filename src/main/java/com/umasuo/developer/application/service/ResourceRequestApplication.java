@@ -10,6 +10,7 @@ import com.umasuo.developer.domain.model.ResourceRequest;
 import com.umasuo.developer.domain.service.ResourcePermissionService;
 import com.umasuo.developer.domain.service.ResourceRequestService;
 import com.umasuo.developer.infrastructure.enums.ReplyRequest;
+import com.umasuo.developer.infrastructure.validator.DeviceDefinitionValidator;
 import com.umasuo.developer.infrastructure.validator.ExistRequestValidator;
 import com.umasuo.developer.infrastructure.validator.FeedBackValidator;
 import com.umasuo.exception.AuthFailedException;
@@ -66,6 +67,11 @@ public class ResourceRequestApplication {
     LOG.debug("Enter. applicantId: {}, request: {}.", applicantId, request);
 
     // TODO: 17/6/9 判断acceptor是否拥有该device和reference
+    if (StringUtils.isNotBlank(request.getDeviceDefinitionId())) {
+    DeviceDefinitionView deviceDefinitionView = restClient
+        .getDeviceDefinition(request.getDeviceDefinitionId(), request.getAcceptorId());
+      DeviceDefinitionValidator.validate(deviceDefinitionView, request);
+    }
 
     ResourceRequest resourceRequest = ResourceRequestMapper.toEntity(applicantId, request);
     ResourceRequest savedRequest = resourceRequestService.save(resourceRequest);
