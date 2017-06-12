@@ -36,6 +36,7 @@ public final class DeviceDefinitionValidator {
    * @param request the request
    */
   public static void validate(DeviceDefinitionView deviceDefinition, ResourceRequestDraft request) {
+    // 检查是否开放设备
     if (deviceDefinition.getOpenable() == false) {
       LOG.debug("DeviceDefinition: {} is not open.", deviceDefinition.getId());
       throw new ParametersException("DeviceDefinition is not open");

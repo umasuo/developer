@@ -66,7 +66,7 @@ public class ResourceRequestApplication {
   public ResourceRequestView create(String applicantId, ResourceRequestDraft request) {
     LOG.debug("Enter. applicantId: {}, request: {}.", applicantId, request);
 
-    // TODO: 17/6/9 判断acceptor是否拥有该device和reference
+    // 检查acceptor是否拥有该device，已经检查该device是否拥有对应的reference（目前只是data）
     if (StringUtils.isNotBlank(request.getDeviceDefinitionId())) {
     DeviceDefinitionView deviceDefinitionView = restClient
         .getDeviceDefinition(request.getDeviceDefinitionId(), request.getAcceptorId());
