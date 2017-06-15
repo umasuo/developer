@@ -3,7 +3,6 @@ package com.umasuo.developer.application.dto;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -19,12 +18,12 @@ public class DeviceDefinitionView implements Serializable {
   /**
    * The Created at.
    */
-  protected ZonedDateTime createdAt;
+  protected Long createdAt;
 
   /**
    * The Last modified at.
    */
-  protected ZonedDateTime lastModifiedAt;
+  protected Long lastModifiedAt;
 
   /**
    * version used for update date check.

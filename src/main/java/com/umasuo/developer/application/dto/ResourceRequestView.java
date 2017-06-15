@@ -1,12 +1,10 @@
 package com.umasuo.developer.application.dto;
 
 import com.umasuo.developer.infrastructure.enums.ReplyRequest;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -25,12 +23,12 @@ public class ResourceRequestView {
   /**
    * The Created at.
    */
-  private ZonedDateTime createdAt;
+  private Long createdAt;
 
   /**
    * The Last modified at.
    */
-  private ZonedDateTime lastModifiedAt;
+  private Long lastModifiedAt;
 
   /**
    * Version used for update date check.

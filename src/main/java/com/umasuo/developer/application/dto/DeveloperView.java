@@ -3,8 +3,6 @@ package com.umasuo.developer.application.dto;
 import com.umasuo.developer.infrastructure.enums.AccountStatus;
 import lombok.Data;
 
-import java.time.ZonedDateTime;
-
 /**
  * Created by umasuo on 17/3/7.
  */
@@ -16,12 +14,12 @@ public class DeveloperView {
   /**
    * The Created at.
    */
-  protected ZonedDateTime createdAt;
+  protected Long createdAt;
 
   /**
    * The Last modified at.
    */
-  protected ZonedDateTime lastModifiedAt;
+  protected Long lastModifiedAt;
 
   /**
    * version used for update date check.

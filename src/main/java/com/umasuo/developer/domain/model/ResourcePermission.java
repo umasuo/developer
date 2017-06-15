@@ -2,9 +2,7 @@ package com.umasuo.developer.domain.model;
 
 import com.umasuo.database.dialect.JSONBUserType;
 import com.umasuo.developer.application.dto.Reference;
-
 import lombok.Data;
-
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -13,7 +11,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -49,13 +46,13 @@ public class ResourcePermission {
    * The Created at.
    */
   @CreatedDate
-  private ZonedDateTime createdAt;
+  private Long createdAt;
 
   /**
    * The Last modified at.
    */
   @LastModifiedDate
-  private ZonedDateTime lastModifiedAt;
+  private Long lastModifiedAt;
 
   /**
    * version used for update date check.
