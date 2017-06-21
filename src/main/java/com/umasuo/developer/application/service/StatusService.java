@@ -47,7 +47,8 @@ public class StatusService {
    * 1，检查ID与token中的ID是否一致
    * 2，检查用户是否登陆
    * 3，登陆是否在有效期内
-   * @param id 开发者ID
+   *
+   * @param id       开发者ID
    * @param tokenStr 传入的token string
    * @return 权限状态
    */
@@ -55,8 +56,9 @@ public class StatusService {
     logger.debug("CheckSignInStatus: id: {}", id);
     AuthStatus authStatus = new AuthStatus();
 
+
     Token tokenInput = JwtUtil.parseToken(config.getSecret(), tokenStr);
-    if (!tokenInput.getSubjectId().equals(id)) {
+    if (tokenInput == null || !tokenInput.getSubjectId().equals(id)) {
       //检查传入的token是否属于该开发者
       authStatus.setLogin(false);
       return authStatus;
