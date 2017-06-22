@@ -30,15 +30,16 @@ public class StatusController {
   private transient StatusService statusService;
 
   /**
-   * 检查开发者权限：是否已经登陆，是否拥有相应权限，token与ID是否对应等
+   * 检查开发者权限：是否已经登陆，是否拥有相应权限，token与ID是否对应等。
+   * 内部接口，api-gateway不配置相关的路径。
    *
    * @param developerId    开发者ID
    * @param token token string
    * @return Auth Status
    */
   @GetMapping(value = Router.DEVELOPER_SIGN_IN_STATUS)
-  public AuthStatus getAuthStatus(@RequestParam @Valid @NotNull String developerId, @RequestParam @Valid
-  @NotNull String token) {
+  public AuthStatus getAuthStatus(@RequestParam @Valid @NotNull String developerId,
+      @RequestParam @Valid @NotNull String token) {
     logger.info("Enter. developerId: {}, tokenStr: {}.", developerId,token);
 
     AuthStatus status = statusService.checkAuthStatus(developerId, token);

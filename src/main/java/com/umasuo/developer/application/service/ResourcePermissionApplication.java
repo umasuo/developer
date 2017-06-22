@@ -43,14 +43,12 @@ public class ResourcePermissionApplication {
    * Find permission.
    *
    * @param applicantId the applicant id
-   * @param acceptorId the acceptor id
    * @return the list
    */
-  public List<ResourcePermissionView> findForApplicant(String applicantId, String acceptorId) {
-    LOG.debug("Enter. applicantId: {}, acceptorId: {}.", applicantId, acceptorId);
+  public List<ResourcePermissionView> findByApplicant(String applicantId) {
+    LOG.debug("Enter. applicantId: {}.", applicantId);
 
-    List<ResourcePermission> permissions =
-        permissionService.findForApplicant(applicantId, acceptorId);
+    List<ResourcePermission> permissions = permissionService.findByApplicant(applicantId);
     List<ResourcePermissionView> result = ResourcePermissionMapper.toModel(permissions);
 
     LOG.debug("Exit. permission size: {}.", result.size());
@@ -86,7 +84,7 @@ public class ResourcePermissionApplication {
 
     // 1. 查看developer是否有对应permission
     List<ResourcePermission> permissions = permissionService
-        .findForApplicant(request.getApplicantId(), request.getAcceptorId());
+        .findPermissions(request.getApplicantId(), request.getAcceptorId());
     PermissionValidator.validateDeveloper(request, permissions);
     // 2. 请求转发到user service
     UserPermissionRequest permissionRequest = UserPermissionRequestMapper.build(userId, request);

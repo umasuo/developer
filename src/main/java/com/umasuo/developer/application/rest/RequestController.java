@@ -1,5 +1,9 @@
 package com.umasuo.developer.application.rest;
 
+import static com.umasuo.developer.infrastructure.Router.ACCEPTOR_REQUEST_ROOT;
+import static com.umasuo.developer.infrastructure.Router.ACCEPTOR_REQUEST_WITH_ID;
+import static com.umasuo.developer.infrastructure.Router.APPLICANT_REQUEST_ROOT;
+
 import com.umasuo.developer.application.dto.ResourceRequestDraft;
 import com.umasuo.developer.application.dto.ResourceRequestView;
 import com.umasuo.developer.application.service.ResourceRequestApplication;
@@ -8,6 +12,12 @@ import com.umasuo.developer.infrastructure.enums.ReplyRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +26,7 @@ import java.util.List;
 /**
  * Created by Davis on 17/6/8.
  */
+@CrossOrigin
 @RestController
 public class RequestController {
 
@@ -37,8 +48,9 @@ public class RequestController {
    * @param request the resource request
    * @return the resource request draft
    */
-  public ResourceRequestView create(@RequestHeader String developerId,
-      ResourceRequestDraft request) {
+  @PostMapping(APPLICANT_REQUEST_ROOT)
+  public ResourceRequestView create(@RequestHeader("developerId") String developerId,
+      @RequestBody ResourceRequestDraft request) {
     LOG.info("Enter. applicantId: {}, request: {}.", developerId, request);
 
     ResourceRequestView result = resourceRequestApplication.create(developerId, request);
@@ -54,7 +66,9 @@ public class RequestController {
    * @param developerId the developer id
    * @return the all request for applicant
    */
-  public List<ResourceRequestView> getAllRequestForApplicant(@RequestHeader String developerId) {
+  @GetMapping(APPLICANT_REQUEST_ROOT)
+  public List<ResourceRequestView> getAllRequestForApplicant(
+      @RequestHeader("developerId") String developerId) {
     LOG.info("Enter. applicantId: {}.", developerId);
 
     List<ResourceRequestView> result =
@@ -71,7 +85,9 @@ public class RequestController {
    * @param developerId the developer id
    * @return the all request for acceptor
    */
-  public List<ResourceRequestView> getAllRequestForAcceptor(@RequestHeader String developerId) {
+  @GetMapping(ACCEPTOR_REQUEST_ROOT)
+  public List<ResourceRequestView> getAllRequestForAcceptor(
+      @RequestHeader("developerId") String developerId) {
     LOG.info("Enter. acceptorId: {}.", developerId);
 
     List<ResourceRequestView> result =
@@ -90,8 +106,9 @@ public class RequestController {
    * @param reply the reply
    * @return the resource request draft
    */
-  public ResourceRequestView replyRequest(@RequestHeader String developerId, String requestId,
-      ReplyRequest reply) {
+  @PutMapping(ACCEPTOR_REQUEST_WITH_ID)
+  public ResourceRequestView replyRequest(@RequestHeader("developerId") String developerId,
+      @PathVariable("id") String requestId, @RequestBody ReplyRequest reply) {
     LOG.info("Enter. developerId: {}, requestId: {}, reply: {}.", developerId, requestId, reply);
 
     ResourceRequestView result = resourceRequestApplication
@@ -109,8 +126,9 @@ public class RequestController {
    * @param requestId the request id
    * @return the list
    */
-  public List<ResourceRequestView> feedBackForApplicant(@RequestHeader String developerId,
-      List<String> requestId) {
+  @PutMapping(APPLICANT_REQUEST_ROOT)
+  public List<ResourceRequestView> feedBackForApplicant(
+      @RequestHeader("developerId") String developerId, @RequestBody List<String> requestId) {
     LOG.info("Enter. developerId: {}, requestId: {}.", developerId, requestId);
 
     List<ResourceRequestView> result = resourceRequestApplication
@@ -128,8 +146,9 @@ public class RequestController {
    * @param requestId the request id
    * @return the list
    */
-  public List<ResourceRequestView> feedBackForAcceptor(@RequestHeader String developerId,
-      List<String> requestId) {
+  @PutMapping(ACCEPTOR_REQUEST_ROOT)
+  public List<ResourceRequestView> feedBackForAcceptor(
+      @RequestHeader("developerId") String developerId, @RequestBody List<String> requestId) {
     LOG.info("Enter. developerId: {}, requestId: {}.", developerId, requestId);
 
     List<ResourceRequestView> result = resourceRequestApplication

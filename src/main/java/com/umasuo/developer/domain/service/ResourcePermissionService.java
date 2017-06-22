@@ -51,11 +51,30 @@ public class ResourcePermissionService {
    * @param acceptorId the acceptor id
    * @return the list
    */
-  public List<ResourcePermission> findForApplicant(String applicantId, String acceptorId) {
+  public List<ResourcePermission> findPermissions(String applicantId, String acceptorId) {
     LOG.debug("Enter. applicantId: {}, acceptorId: {}.", applicantId, acceptorId);
     ResourcePermission sample = new ResourcePermission();
     sample.setApplicantId(applicantId);
     sample.setAcceptorId(acceptorId);
+
+    Example<ResourcePermission> example = Example.of(sample);
+
+    List<ResourcePermission> permissions = repository.findAll(example);
+
+    LOG.debug("Exit. permission size: {}.", permissions.size());
+    return permissions;
+  }
+
+  /**
+   * Find permission.
+   *
+   * @param applicantId the applicant id
+   * @return the list
+   */
+  public List<ResourcePermission> findByApplicant(String applicantId) {
+    LOG.debug("Enter. applicantId: {}.", applicantId);
+    ResourcePermission sample = new ResourcePermission();
+    sample.setApplicantId(applicantId);
 
     Example<ResourcePermission> example = Example.of(sample);
 
