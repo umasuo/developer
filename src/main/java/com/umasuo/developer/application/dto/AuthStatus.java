@@ -2,8 +2,6 @@ package com.umasuo.developer.application.dto;
 
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * 用户权限状态，包含：是否登陆，所拥有的权限（scope）
  * Created by umasuo on 17/6/1.

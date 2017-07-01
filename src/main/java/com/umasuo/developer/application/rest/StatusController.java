@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,8 +39,8 @@ public class StatusController {
    * @return Auth Status
    */
   @GetMapping(value = Router.DEVELOPER_SIGN_IN_STATUS)
-  public AuthStatus getAuthStatus(@RequestParam @Valid @NotNull String developerId,
-      @RequestParam @Valid @NotNull String token) {
+  public AuthStatus getAuthStatus(@PathVariable @Valid @NotNull String developerId,
+                                  @RequestParam @Valid @NotNull String token) {
     logger.info("Enter. developerId: {}, tokenStr: {}.", developerId,token);
 
     AuthStatus status = statusService.checkAuthStatus(developerId, token);

@@ -22,12 +22,12 @@ import java.util.ArrayList;
  * Login service for login and keep login status.
  */
 @Service
-public class SignInService {
+public class SignInApplication {
 
   /**
    * logger.
    */
-  private final static Logger logger = LoggerFactory.getLogger(SignInService.class);
+  private final static Logger logger = LoggerFactory.getLogger(SignInApplication.class);
 
   /**
    * the key in mapper which in cache.
@@ -68,6 +68,7 @@ public class SignInService {
       throw new PasswordErrorException("password or email not correct.");
     }
 
+    //todo 如果采用https 可以采用JWT，免去session的检查必要，如果采用http，可以考虑去掉jwt
     String token = jwtUtil.generateToken(TokenType.DEVELOPER, developer.getId(), jwtUtil.getExpiresIn(),
         new ArrayList<>());
 
@@ -89,6 +90,7 @@ public class SignInService {
    */
   private void cacheSignInStatus(String id, String tokenString) {
     Token token = jwtUtil.parseToken(tokenString);
+    //todo cache key 的设置
     //cache the sigin result
     redisTemplate.boundHashOps(id).put(SIGN_IN_CACHE_KEY, token);
   }

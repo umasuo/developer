@@ -14,12 +14,12 @@ import org.springframework.util.Assert;
  * sign out service.
  */
 @Service
-public class SignOutService {
+public class SignOutApplication {
 
   /**
    * logger.
    */
-  private final static Logger LOGGER = LoggerFactory.getLogger(SignInService.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(SignInApplication.class);
 
   /**
    * redis ops. cache cluster should be used.
@@ -42,6 +42,7 @@ public class SignOutService {
     LOGGER.debug("SignOut: token: {}", tokenString);
 
     //parse the token ,to see if the token is legal
+    // todo 考虑去掉JWT的格式
     Token token = jwtUtil.parseToken(tokenString);
     clearCache(token);
 
@@ -56,7 +57,7 @@ public class SignOutService {
   private void clearCache(Token token) {
     String id = token.getSubjectId();
     Assert.notNull(id);
-
+    // 清理该开发者的token
     redisTemplate.delete(id);
   }
 }
