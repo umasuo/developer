@@ -7,17 +7,12 @@ public class Router {
   /**
    * authentication root.
    */
-  public static final String DEVELOPER_ROOT = "/developers";
+  public static final String DEVELOPER_ROOT = "/v1/developers";
 
   /**
    * login.
    */
   public static final String DEVELOPER_SIGN_IN = DEVELOPER_ROOT + "/signin";
-
-  /**
-   * login.
-   */
-  public static final String DEVELOPER_SIGN_IN_STATUS = DEVELOPER_ROOT + "/signin/status";
 
   /**
    * logout.
@@ -40,57 +35,9 @@ public class Router {
   public static final String DEVELOPER_WITH_ID = DEVELOPER_ROOT + "/{" + ID + "}";
 
   /**
-   * Open developer root.
+   * login.
    */
-  public static final String OPEN_DEVELOPER_ROOT = DEVELOPER_ROOT + "/open";
+  public static final String DEVELOPER_SIGN_IN_STATUS = DEVELOPER_WITH_ID + "/status";
 
-  /**
-   * Resource root.
-   */
-  public static final String RESOURCE_ROOT = DEVELOPER_ROOT + "/resource";
 
-  /**
-   * Permission root.
-   */
-  public static final String PERMISSION_ROOT = RESOURCE_ROOT + "/permissions";
-
-  /**
-   * Applicant permission root.
-   */
-  public static final String APPLICANT_PERMISSION_ROOT = PERMISSION_ROOT + "/applicant";
-
-  /**
-   * Acceptor permission root.
-   */
-  public static final String ACCEPTOR_PERMISSION_ROOT = PERMISSION_ROOT + "/acceptor";
-
-  /**
-   * Permission with id.
-   */
-  public static final String PERMISSION_WITH_ID = PERMISSION_ROOT + "/{id}";
-
-  /**
-   * Request root.
-   */
-  public static final String REQUEST_ROOT = RESOURCE_ROOT + "/request";
-
-  /**
-   * Applicant request root.
-   */
-  public static final String APPLICANT_REQUEST_ROOT = REQUEST_ROOT + "/applicant";
-
-  /**
-   * Acceptor request root.
-   */
-  public static final String ACCEPTOR_REQUEST_ROOT = REQUEST_ROOT + "/acceptor";
-
-  /**
-   * Acceptor request with id.
-   */
-  public static final String ACCEPTOR_REQUEST_WITH_ID = ACCEPTOR_REQUEST_ROOT + "/{id}";
-
-  /**
-   * User request root.
-   */
-  public static final String USER_REQUEST_ROOT = REQUEST_ROOT + "/user";
 }

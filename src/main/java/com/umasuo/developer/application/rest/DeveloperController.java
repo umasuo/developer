@@ -1,15 +1,10 @@
 package com.umasuo.developer.application.rest;
 
-import static com.umasuo.developer.infrastructure.Router.DEVELOPER_WITH_ID;
-import static com.umasuo.developer.infrastructure.Router.ID;
-import static com.umasuo.developer.infrastructure.Router.OPEN_DEVELOPER_ROOT;
-
 import com.umasuo.developer.application.dto.DeveloperView;
 import com.umasuo.developer.application.dto.action.OpenStatusRequest;
 import com.umasuo.developer.application.service.VerificationApplication;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.domain.service.DeveloperService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.umasuo.developer.infrastructure.Router.DEVELOPER_ROOT;
+import static com.umasuo.developer.infrastructure.Router.DEVELOPER_WITH_ID;
+import static com.umasuo.developer.infrastructure.Router.ID;
+
 /**
  * Developer controller.
- *
+ * <p>
  * Created by Davis on 17/6/3.
  */
 @CrossOrigin
@@ -76,8 +75,8 @@ public class DeveloperController {
    *
    * @return list of DeveloperView
    */
-  @GetMapping(OPEN_DEVELOPER_ROOT)
-  public List<DeveloperView> getOpenDeveloper() {
+  @GetMapping(value = DEVELOPER_ROOT, params = "open")
+  public List<DeveloperView> getOpenDeveloper(@RequestParam boolean open) {
     LOG.info("Enter.");
 
     List<DeveloperView> result = developerService.getOpenDeveloper();
@@ -91,18 +90,19 @@ public class DeveloperController {
    * Update developer open status.
    *
    * @param developerId developer id
-   * @param request update request
+   * @param request     update request
    * @return updated developer
    */
-  @PutMapping(OPEN_DEVELOPER_ROOT)
-  public DeveloperView updateOpenStatus(@RequestHeader("developerId") String developerId,
-      @RequestBody OpenStatusRequest request) {
+  @PutMapping(value = DEVELOPER_WITH_ID)
+  public DeveloperView updateOpenStatus(@PathVariable("id") String id,
+                                        @RequestHeader("developerId") String developerId,
+                                        @RequestBody OpenStatusRequest request) {
     LOG.info("Enter. developerId: {}, openStatusRequest: {}.", developerId, request);
 
     DeveloperView result = developerService
         .updateOpenStatus(developerId, request.getVersion(), request.getOpenable());
 
-    LOG.info("Exit.");
+    LOG.info("Exit. result: {}.", result);
 
     return result;
   }

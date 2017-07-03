@@ -2,7 +2,7 @@ package com.umasuo.developer.application.rest;
 
 import com.umasuo.developer.application.dto.SignIn;
 import com.umasuo.developer.application.dto.SignInResult;
-import com.umasuo.developer.application.service.SignInService;
+import com.umasuo.developer.application.service.SignInApplication;
 import com.umasuo.developer.infrastructure.Router;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class SignInController {
    * sign in service.
    */
   @Autowired
-  private transient SignInService signInService;
+  private transient SignInApplication signInService;
 
   /**
    * sign in.

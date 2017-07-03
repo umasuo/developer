@@ -65,7 +65,7 @@ public class StatusService {
     }
     authStatus.setDeveloperId(id);
 
-    Token token = (Token) redisTemplate.opsForHash().get(id, SignInService.SIGN_IN_CACHE_KEY);
+    Token token = (Token) redisTemplate.opsForHash().get(id, SignInApplication.SIGN_IN_CACHE_KEY);
     if (token == null) {
       authStatus.setLogin(false);
       return authStatus;

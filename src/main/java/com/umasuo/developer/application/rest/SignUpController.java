@@ -40,6 +40,7 @@ public class SignUpController {
   public void signUp(@RequestBody @Valid SignIn signUp) {
     logger.info("SignUp: {}", signUp);
 
+    //TODO 需要添加用户验证
     signUpService.signUp(signUp.getEmail(), signUp.getPassword());
   }
 
