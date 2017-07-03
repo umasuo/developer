@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
  * Created by Davis on 17/7/3.
  */
 @Service(UpdateActionUtils.SET_OPEN_STATUS)
-public class SetOpenService implements Updater<Developer, UpdateAction>{
+public class SetOpenStatusService implements Updater<Developer, UpdateAction>{
 
   /**
    * Logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(SetOpenService.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SetOpenStatusService.class);
 
 
   @Override
