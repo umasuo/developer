@@ -1,5 +1,8 @@
 package com.umasuo.developer.application.dto.action;
 
+import com.umasuo.developer.infrastructure.update.UpdateAction;
+import com.umasuo.developer.infrastructure.update.UpdateActionUtils;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Getter
 @ToString
-public class OpenStatusRequest {
+public class SetOpenStatus implements UpdateAction{
 
   /**
    * The Openable.
@@ -21,10 +24,8 @@ public class OpenStatusRequest {
   @NotNull
   private Boolean openable;
 
-  /**
-   * The Version.
-   */
-  @NotNull
-  @Min(1)
-  private Integer version;
+  @Override
+  public String getActionName() {
+    return UpdateActionUtils.SET_OPEN_STATUS;
+  }
 }

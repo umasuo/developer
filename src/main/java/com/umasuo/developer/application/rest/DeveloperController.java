@@ -5,10 +5,11 @@ import static com.umasuo.developer.infrastructure.Router.DEVELOPER_WITH_ID;
 import static com.umasuo.developer.infrastructure.Router.ID;
 
 import com.umasuo.developer.application.dto.DeveloperView;
-import com.umasuo.developer.application.dto.action.OpenStatusRequest;
 import com.umasuo.developer.application.service.VerificationApplication;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.domain.service.DeveloperService;
+import com.umasuo.developer.infrastructure.update.UpdateRequest;
+import com.umasuo.exception.AuthFailedException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,29 +87,26 @@ public class DeveloperController {
     return result;
   }
 
-  /**
-   * Update developer open status.
-   *
-   * @param developerId developer id
-   * @param request     update request
-   * @return updated developer
-   */
   @PutMapping(value = DEVELOPER_WITH_ID)
-  public DeveloperView updateOpenStatus(@PathVariable("id") String id,
-                                        @RequestHeader("developerId") String developerId,
-                                        @RequestBody OpenStatusRequest request) {
-    LOG.info("Enter. developerId: {}, openStatusRequest: {}.", developerId, request);
+  public DeveloperView update(@PathVariable(ID) String id,
+      @RequestHeader("developerId") String developerId,
+      @RequestBody UpdateRequest request) {
+    LOG.info("Enter. id: {}, developer: {}.");
+    if (!id.equals(developerId)) {
+      LOG.debug("Developer: {} Can not update other developer: {}.", developerId, id);
+      throw new AuthFailedException("Developer do not have auth to update other developer");
+    }
 
-    DeveloperView result = developerService
-        .updateOpenStatus(developerId, request.getVersion(), request.getOpenable());
+    DeveloperView updatedDeveloper = developerService
+        .update(id, request.getVersion(), request.getActions());
 
-    LOG.info("Exit. result: {}.", result);
-
-    return result;
+    LOG.debug("Exit.");
+    return updatedDeveloper;
   }
 
   @GetMapping(value = DEVELOPER_WITH_ID, params = "verificationCode")
-  public void verifyEmail(@PathVariable(ID) String developerId, @RequestParam("verificationCode") String code) {
+  public void verifyEmail(@PathVariable(ID) String developerId,
+      @RequestParam("verificationCode") String code) {
     LOG.info("Enter. developerId: {}, token: {}.", developerId, code);
 
     verificationApplication.verifyEmail(developerId, code);

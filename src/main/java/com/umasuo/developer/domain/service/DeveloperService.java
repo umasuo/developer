@@ -5,9 +5,12 @@ import com.umasuo.developer.application.dto.mapper.DeveloperMapper;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.infrastructure.enums.AccountStatus;
 import com.umasuo.developer.infrastructure.repository.DeveloperRepository;
+import com.umasuo.developer.infrastructure.update.DeveloperUpdaterService;
+import com.umasuo.developer.infrastructure.update.UpdateAction;
 import com.umasuo.developer.infrastructure.util.PasswordUtil;
 import com.umasuo.developer.infrastructure.validator.VersionValidator;
 import com.umasuo.exception.AlreadyExistException;
+import com.umasuo.exception.ConflictException;
 import com.umasuo.exception.NotExistException;
 
 import org.slf4j.Logger;
@@ -36,6 +39,9 @@ public class DeveloperService {
    */
   @Autowired
   private transient DeveloperRepository repository;
+
+  @Autowired
+  private transient DeveloperUpdaterService updaterService;
 
   /**
    * create a developer from an sample.
@@ -194,5 +200,36 @@ public class DeveloperService {
     logger.trace("Updated developer: {}.", result);
     logger.debug("Exit.");
     return result;
+  }
+
+  public DeveloperView update(String id, Integer version, List<UpdateAction> actions) {
+    Developer developer = repository.findOne(id);
+    if (developer == null) {
+      logger.debug("Developer: {} not exist.", id);
+      throw new NotExistException("Developer not exist");
+    }
+
+    checkVersion(version, developer.getVersion());
+
+    actions.stream().forEach(action -> updaterService.handle(developer, action));
+
+    repository.save(developer);
+
+    DeveloperView updatedDeveloper = DeveloperMapper.toModel(developer);
+
+    return updatedDeveloper;
+  }
+
+  /**
+   * check the version.
+   *
+   * @param inputVersion Integer
+   * @param existVersion Integer
+   */
+  private void checkVersion(Integer inputVersion, Integer existVersion) {
+    if (!inputVersion.equals(existVersion)) {
+      logger.debug("Developer version is not correct.");
+      throw new ConflictException("Developer version is not correct.");
+    }
   }
 }
