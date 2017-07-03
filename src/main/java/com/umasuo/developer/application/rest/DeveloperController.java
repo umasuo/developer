@@ -6,6 +6,7 @@ import static com.umasuo.developer.infrastructure.Router.OPEN_DEVELOPER_ROOT;
 
 import com.umasuo.developer.application.dto.DeveloperView;
 import com.umasuo.developer.application.dto.action.OpenStatusRequest;
+import com.umasuo.developer.application.service.VerificationApplication;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.domain.service.DeveloperService;
 
@@ -15,9 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -41,6 +44,9 @@ public class DeveloperController {
    */
   @Autowired
   private transient DeveloperService developerService;
+
+  @Autowired
+  private transient VerificationApplication verificationApplication;
 
   /**
    * Check if developer exist.
@@ -99,5 +105,14 @@ public class DeveloperController {
     LOG.info("Exit.");
 
     return result;
+  }
+
+  @GetMapping(value = DEVELOPER_WITH_ID, params = "verificationCode")
+  public void verifyEmail(@PathVariable(ID) String developerId, @RequestParam("verificationCode") String code) {
+    LOG.info("Enter. developerId: {}, token: {}.", developerId, code);
+
+    verificationApplication.verifyEmail(developerId, code);
+
+    LOG.info("Exit.");
   }
 }

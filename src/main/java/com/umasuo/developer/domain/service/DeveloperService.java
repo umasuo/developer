@@ -9,6 +9,7 @@ import com.umasuo.developer.infrastructure.util.PasswordUtil;
 import com.umasuo.developer.infrastructure.validator.VersionValidator;
 import com.umasuo.exception.AlreadyExistException;
 import com.umasuo.exception.NotExistException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,14 @@ public class DeveloperService {
   public Developer get(String id) {
     logger.debug("GetDeveloper: id: {}", id);
     return this.repository.findOne(id);
+  }
+
+  public Developer save(Developer developer) {
+    logger.debug("Enter. developer: {}.", developer);
+    Developer savedDeveloper = repository.save(developer);
+
+    logger.debug("Exit.");
+    return savedDeveloper;
   }
 
   /**

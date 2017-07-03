@@ -2,6 +2,7 @@ package com.umasuo.developer.application.service;
 
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.domain.service.DeveloperService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class SignUpService {
   private final static Logger LOGGER = LoggerFactory.getLogger(SignUpService.class);
 
   @Autowired
+  private transient VerificationApplication verificationApplication;
+
+  @Autowired
   private transient DeveloperService developerService;
 
   public void signUp(String email, String password) {
@@ -27,6 +31,7 @@ public class SignUpService {
 
     Developer developer = developerService.create(email, password);
     Assert.notNull(developer);
+    verificationApplication.sendVerificationEmail(developer.getId(), developer.getEmail());
   }
 
 }

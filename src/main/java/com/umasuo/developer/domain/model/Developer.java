@@ -74,6 +74,11 @@ public class Developer {
    */
   private AccountStatus status;
 
+  /**
+   * 邮箱验证码。
+   */
+  private String verificationCode;
+
   // TODO add company info. for verification.
   //private String company;
 
