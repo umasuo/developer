@@ -29,6 +29,8 @@ import java.util.function.Consumer;
  * ResourceRequest application.
  *
  * Created by Davis on 17/6/9.
+ *
+ * todo 暂时没用
  */
 @Service
 public class ResourceRequestApplication {

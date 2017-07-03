@@ -1,17 +1,21 @@
 package com.umasuo.developer.application.rest;
 
+import static com.umasuo.developer.infrastructure.Router.DEVELOPER_ROOT;
+import static com.umasuo.developer.infrastructure.Router.DEVELOPER_WITH_ID;
+import static com.umasuo.developer.infrastructure.Router.ID;
+
 import com.umasuo.developer.application.dto.DeveloperView;
 import com.umasuo.developer.application.dto.action.OpenStatusRequest;
 import com.umasuo.developer.application.service.VerificationApplication;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.domain.service.DeveloperService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -19,10 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
-import static com.umasuo.developer.infrastructure.Router.DEVELOPER_ROOT;
-import static com.umasuo.developer.infrastructure.Router.DEVELOPER_WITH_ID;
-import static com.umasuo.developer.infrastructure.Router.ID;
 
 /**
  * Developer controller.

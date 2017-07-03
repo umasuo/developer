@@ -18,6 +18,7 @@ import java.util.List;
 
 /**
  * Created by Davis on 17/6/9.
+ * todo 暂时没用
  */
 @Service
 public class ResourcePermissionApplication {
