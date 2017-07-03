@@ -4,10 +4,12 @@ import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.model.Updater;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Davis on 17/7/3.
  */
+@Service
 public class DeveloperUpdaterService implements Updater<Developer, UpdateAction> {
 
   /**

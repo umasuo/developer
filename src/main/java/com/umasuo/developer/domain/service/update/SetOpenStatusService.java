@@ -16,12 +16,6 @@ import org.springframework.stereotype.Service;
 @Service(UpdateActionUtils.SET_OPEN_STATUS)
 public class SetOpenStatusService implements Updater<Developer, UpdateAction>{
 
-  /**
-   * Logger.
-   */
-  private static final Logger LOG = LoggerFactory.getLogger(SetOpenStatusService.class);
-
-
   @Override
   public void handle(Developer developer, UpdateAction updateAction) {
     SetOpenStatus action = (SetOpenStatus) updateAction;

@@ -3,12 +3,15 @@ package com.umasuo.developer.application.dto.action;
 import com.umasuo.developer.infrastructure.update.UpdateAction;
 import com.umasuo.developer.infrastructure.update.UpdateActionUtils;
 
+import lombok.Data;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 /**
  * Created by Davis on 17/7/3.
  */
+@Data
 public class ResetPassword implements UpdateAction {
 
   @NotNull

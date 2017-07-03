@@ -8,7 +8,6 @@ import com.umasuo.developer.infrastructure.repository.DeveloperRepository;
 import com.umasuo.developer.infrastructure.update.DeveloperUpdaterService;
 import com.umasuo.developer.infrastructure.update.UpdateAction;
 import com.umasuo.developer.infrastructure.util.PasswordUtil;
-import com.umasuo.developer.infrastructure.validator.VersionValidator;
 import com.umasuo.exception.AlreadyExistException;
 import com.umasuo.exception.ConflictException;
 import com.umasuo.exception.NotExistException;
@@ -17,8 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -49,7 +46,7 @@ public class DeveloperService {
    * @param developer the sample
    * @return result. developer
    */
-  public Developer create(Developer developer) {
+  public Developer save(Developer developer) {
     logger.debug("CreateDeveloper: {}", developer);
     return this.repository.save(developer);
   }
@@ -75,7 +72,7 @@ public class DeveloperService {
     String encryptedPwd = PasswordUtil.hashPassword(password);
     developer.setPassword(encryptedPwd);
 
-    return create(developer);
+    return save(developer);
   }
 
   /**
@@ -87,14 +84,6 @@ public class DeveloperService {
   public Developer get(String id) {
     logger.debug("GetDeveloper: id: {}", id);
     return this.repository.findOne(id);
-  }
-
-  public Developer save(Developer developer) {
-    logger.debug("Enter. developer: {}.", developer);
-    Developer savedDeveloper = repository.save(developer);
-
-    logger.debug("Exit.");
-    return savedDeveloper;
   }
 
   /**
@@ -112,53 +101,6 @@ public class DeveloperService {
     return developer;
   }
 
-
-  /**
-   * change password.
-   *
-   * @param id      developer id.
-   * @param version current version
-   * @param oldPwd  old password
-   * @param newPwd  new password
-   * @return developer
-   */
-  public Developer changePassword(String id, Integer version, String oldPwd, String newPwd) {
-    Developer developer = this.get(id);
-    Assert.notNull(developer);
-
-    //TODO check status
-
-    boolean isOldPwdRight = PasswordUtil.checkPassword(oldPwd, developer.getPassword());
-    if (!isOldPwdRight) {
-      //TODO throw exception
-      //throw new Password
-    }
-    developer.setVersion(version);
-    developer.setPassword(PasswordUtil.hashPassword(newPwd));
-    return this.repository.save(developer);
-  }
-
-  /**
-   * forget password, send an reset email to the developer for reset password.
-   *
-   * @param email email
-   */
-  public void forgetPassword(String email) {
-    //TODO send the email.
-  }
-
-  /**
-   * reset password with the reset token.
-   *
-   * @param email email
-   * @param token reset password token.
-   */
-  public void resetPassword(String email, String token) {
-    //TODO check token
-    //getAllForApplicant developer
-    // reset the password
-  }
-
   /**
    * Get open developers.
    *
@@ -173,32 +115,6 @@ public class DeveloperService {
 
     logger.debug("Exit. open developer size: {}.", result.size());
 
-    return result;
-  }
-
-  /**
-   * Update developer open status.
-   *
-   * @param id       the id
-   * @param version  the version
-   * @param openable the openable
-   * @return the developer view
-   */
-  @Transactional
-  public DeveloperView updateOpenStatus(String id, Integer version, Boolean openable) {
-    logger.debug("Enter. developerId: {}, version: {}, openable: {}.", id, version, openable);
-
-    Developer developer = repository.findOne(id);
-    VersionValidator.validate(developer.getVersion(), version);
-
-    developer.setOpenable(openable);
-
-    Developer updatedDeveloper = repository.save(developer);
-
-    DeveloperView result = DeveloperMapper.toModel(updatedDeveloper);
-
-    logger.trace("Updated developer: {}.", result);
-    logger.debug("Exit.");
     return result;
   }
 

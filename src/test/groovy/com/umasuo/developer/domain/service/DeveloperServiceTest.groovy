@@ -31,7 +31,7 @@ class DeveloperServiceTest extends Specification {
         Developer developer = new Developer(id: id, email: email, password: hashedPassword)
         when:
         developerRepository.save(_) >> developer
-        def result = developerService.create(developer)
+        def result = developerService.save(developer)
         then:
         noExceptionThrown()
         result.getId() == developer.getId()

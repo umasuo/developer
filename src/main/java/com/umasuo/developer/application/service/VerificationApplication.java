@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -33,6 +34,8 @@ public class VerificationApplication {
 
   private static final String VERIFICATION_KEY = "developer:verification:";
 
+  private static final String RESET_VERIFICATION_KEY = "developer:reset:verification:";
+
   private static final String subject = "Please verify your email address.";
 
   /**
@@ -44,7 +47,9 @@ public class VerificationApplication {
   @Autowired
   private transient DeveloperService developerService;
 
-  private static long EXPIRE_TIME = 3 * 60 * 60 * 1000L;
+  private static long VERIFICATION_EXPIRE_TIME = 3 * 60 * 60 * 1000L;
+
+  private static long RESET_EXPIRE_TIME = 30 * 60 * 60 * 1000L;
 
   private static TimeUnit TIME_UTIL = TimeUnit.MILLISECONDS;
 
@@ -53,7 +58,9 @@ public class VerificationApplication {
 
   /**
    * 发送验证邮件。
+   * 使用Async实现异步调用，之后考虑使用其它方法实现。
    */
+  @Async
   public void sendVerificationEmail(String developerId, String email) {
     LOG.debug("Enter. developerId: {}, email: {}.", developerId, email);
 
@@ -66,7 +73,7 @@ public class VerificationApplication {
     javaMailSender.send(mailMessage);
 
     redisTemplate.opsForValue()
-        .set(createRedisKey(developerId), verificationCode, EXPIRE_TIME, TIME_UTIL);
+        .set(createRedisKey(developerId), verificationCode, VERIFICATION_EXPIRE_TIME, TIME_UTIL);
   }
 
   /**
@@ -90,6 +97,28 @@ public class VerificationApplication {
     developerService.save(developer);
 
     redisTemplate.delete(redisKey);
+  }
+
+  /**
+   * 发送重置密码的token到开发者邮箱。
+   *
+   * @param email
+   */
+  public void sendResetToken(String email) {
+    LOG.debug("Enter. email: {}.", email);
+
+    Developer developer = developerService.getWithEmail(email);
+
+    String resetToken = RandomStringUtils.randomAlphanumeric(CODE_LENGTH);
+
+    // TODO: 17/7/3
+    String message = "" + resetToken;
+    SimpleMailMessage mailMessage = MailMessageMapper.build(email, "Reset password", message);
+
+    javaMailSender.send(mailMessage);
+
+    redisTemplate.opsForValue().set(RESET_VERIFICATION_KEY + developer.getId(), resetToken,
+        RESET_EXPIRE_TIME, TIME_UTIL);
   }
 
   /**
