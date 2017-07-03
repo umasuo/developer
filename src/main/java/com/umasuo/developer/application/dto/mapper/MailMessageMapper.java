@@ -32,7 +32,7 @@ public final class MailMessageMapper {
   public static String createMessage(String developerId, String verificationCode) {
     // TODO: 17/7/3
     String msg =
-        "http://localhost:8804/developers/" + developerId + "?verificationCode=" + verificationCode;
+        "http://localhost:8804/v1/developers/" + developerId + "?verificationCode=" + verificationCode;
     return msg;
   }
 }
