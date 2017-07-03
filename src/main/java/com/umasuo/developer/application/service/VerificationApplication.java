@@ -44,9 +44,9 @@ public class VerificationApplication {
   @Autowired
   private transient DeveloperService developerService;
 
-  private static long EXPIRE_TIME = 3 * 60 * 60L;
+  private static long EXPIRE_TIME = 3 * 60 * 60 * 1000L;
 
-  private static TimeUnit TIME_UTIL = TimeUnit.SECONDS;
+  private static TimeUnit TIME_UTIL = TimeUnit.MILLISECONDS;
 
   @Autowired
   private transient JavaMailSender javaMailSender;
@@ -80,13 +80,16 @@ public class VerificationApplication {
       throw new NotExistException("Developer not exist");
     }
 
-    String requestCode = redisTemplate.opsForValue().get(createRedisKey(developerId)).toString();
+    String redisKey = createRedisKey(developerId);
+    String requestCode = redisTemplate.opsForValue().get(redisKey).toString();
     if (!code.equals(requestCode)) {
       LOG.debug("VerificationCode is not match");
       throw new ParametersException("VerificationCode is not match");
     }
     developer.setStatus(AccountStatus.VERIFIED);
     developerService.save(developer);
+
+    redisTemplate.delete(redisKey);
   }
 
   /**
