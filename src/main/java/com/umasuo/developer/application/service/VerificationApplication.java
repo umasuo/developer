@@ -53,9 +53,6 @@ public class VerificationApplication {
 
   /**
    * 发送验证邮件。
-   *
-   * @param developerId
-   * @param email
    */
   public void sendVerificationEmail(String developerId, String email) {
     LOG.debug("Enter. developerId: {}, email: {}.", developerId, email);
@@ -74,9 +71,6 @@ public class VerificationApplication {
 
   /**
    * 验证邮箱。
-   *
-   * @param developerId
-   * @param code
    */
   public void verifyEmail(String developerId, String code) {
     LOG.debug("Enter. developerId: {}, verificationCode: {}.", developerId, code);
@@ -97,9 +91,6 @@ public class VerificationApplication {
 
   /**
    * Create key for redis.
-   *
-   * @param developerId
-   * @return
    */
   private String createRedisKey(String developerId) {
     return VERIFICATION_KEY + developerId;
