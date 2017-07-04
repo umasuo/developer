@@ -15,11 +15,6 @@ public class Router {
   public static final String DEVELOPER_SIGN_IN = DEVELOPER_ROOT + "/signin";
 
   /**
-   * logout.
-   */
-  public static final String DEVELOPER_SIGN_OUT = DEVELOPER_ROOT + "/signout";
-
-  /**
    * sign up.
    */
   public static final String DEVELOPER_SIGN_UP = DEVELOPER_ROOT + "/signup";
@@ -38,6 +33,11 @@ public class Router {
    * login.
    */
   public static final String DEVELOPER_SIGN_IN_STATUS = DEVELOPER_WITH_ID + "/status";
+
+  /**
+   * logout.
+   */
+  public static final String DEVELOPER_SIGN_OUT = DEVELOPER_WITH_ID + "/signout";
 
   public static final String DEVELOPER_VERIFY = DEVELOPER_WITH_ID + "/verify";
 

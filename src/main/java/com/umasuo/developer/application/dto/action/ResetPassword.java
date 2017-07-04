@@ -14,6 +14,7 @@ import javax.validation.constraints.Pattern;
 @Data
 public class ResetPassword implements UpdateAction {
 
+  private static final long serialVersionUID = 5309491764291388935L;
   @NotNull
   private String token;
 

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,7 +30,7 @@ public class ResetPasswordService implements Updater<Developer, UpdateAction> {
   private static final Logger LOG = LoggerFactory.getLogger(ResetPasswordService.class);
 
   @Autowired
-  private transient RedisTemplate redisTemplate;
+  private transient StringRedisTemplate redisTemplate;
 
   @Override
   public void handle(Developer developer, UpdateAction updateAction) {
@@ -40,7 +41,8 @@ public class ResetPasswordService implements Updater<Developer, UpdateAction> {
 
     String key = String.format(RedisKeyUtil.RESET_KEY_FORMAT, developer.getId());
 
-    String requestToken = redisTemplate.opsForValue().get(key).toString();
+    // null point
+    String requestToken = redisTemplate.opsForValue().get(key);
 
     if (!token.equals(requestToken)) {
       LOG.debug("Reset password token is out of time or not exist.");
