@@ -12,6 +12,7 @@ import com.umasuo.model.Updater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,8 @@ public class ResetPasswordService implements Updater<Developer, UpdateAction> {
   @Autowired
   private transient RedisTemplate redisTemplate;
 
-  private static final String RESET_VERIFICATION_KEY = "developer:reset:verification:";
+  @Value("${redis.key.reset}")
+  private String RESET_VERIFICATION_KEY;
 
   @Override
   public void handle(Developer developer, UpdateAction updateAction) {
@@ -38,8 +40,9 @@ public class ResetPasswordService implements Updater<Developer, UpdateAction> {
 
     String token = action.getToken();
 
-    String requestToken =
-        redisTemplate.opsForValue().get(RESET_VERIFICATION_KEY + developer.getId()).toString();
+    String key = String.format(RESET_VERIFICATION_KEY, developer.getId());
+
+    String requestToken = redisTemplate.opsForValue().get(key).toString();
 
     if (!token.equals(requestToken)) {
       LOG.debug("Reset password token is out of time or not exist.");

@@ -1,6 +1,8 @@
 package com.umasuo.developer.application.rest;
 
+import static com.umasuo.developer.infrastructure.Router.DEVELOPER_RESET_PASSWORD;
 import static com.umasuo.developer.infrastructure.Router.DEVELOPER_ROOT;
+import static com.umasuo.developer.infrastructure.Router.DEVELOPER_VERIFY;
 import static com.umasuo.developer.infrastructure.Router.DEVELOPER_WITH_ID;
 import static com.umasuo.developer.infrastructure.Router.ID;
 
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -110,6 +113,31 @@ public class DeveloperController {
     LOG.info("Enter. developerId: {}, token: {}.", developerId, code);
 
     verificationApplication.verifyEmail(developerId, code);
+
+    LOG.info("Exit.");
+  }
+
+  @PostMapping(value = DEVELOPER_RESET_PASSWORD)
+  public void resetPassword(@RequestParam String email) {
+    LOG.info("Enter. email: {}.", email);
+
+    verificationApplication.sendResetToken(email);
+
+    LOG.info("Exit.");
+  }
+
+  @PostMapping(value = DEVELOPER_VERIFY)
+  public void getVerifyEmail(@PathVariable(ID) String id,
+      @RequestHeader("developerId") String developerId) {
+    LOG.info("Enter. id: {}, developerId: {}.", id, developerId);
+
+    // TODO: 17/7/4 最好移到一个统一的地方
+    if (!id.equals(developerId)) {
+      LOG.debug("Developer: {} Can not update other developer: {}.", developerId, id);
+      throw new AuthFailedException("Developer do not have auth to update other developer");
+    }
+
+    verificationApplication.resendVerifyEmail(id);
 
     LOG.info("Exit.");
   }

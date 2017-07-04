@@ -43,3 +43,14 @@ user:
 device-definition:
   service:
     uri: http://localhost:8805/
+
+redis:
+  key:
+    verify: developer:%s:verify
+    reset: developer:%s:reset
+    developer: developer:%s
+
+email:
+  subject:
+    verify: Please verify your email address.
+    reset: Reset password.

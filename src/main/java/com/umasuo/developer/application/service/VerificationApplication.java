@@ -11,6 +11,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -32,11 +33,23 @@ public class VerificationApplication {
 
   private static final int CODE_LENGTH = 12;
 
-  private static final String VERIFICATION_KEY = "developer:verification:";
+  @Value("${redis.key.verify}")
+  private String VERIFY_KEY_FORMAT;
 
-  private static final String RESET_VERIFICATION_KEY = "developer:reset:verification:";
+  @Value("${redis.key.reset}")
+  private String RESET_KEY_FORMAT;
 
-  private static final String subject = "Please verify your email address.";
+  @Value("${email.VERIFY_SUBJECT.verify}")
+  private String VERIFY_SUBJECT;
+
+  @Value("${email.VERIFY_SUBJECT.reset}")
+  private String RESET_SUBJECT;
+
+  private static long VERIFY_EXPIRE_TIME = 30 * 60 * 60 * 1000L;
+
+  private static long RESET_EXPIRE_TIME = 30 * 60 * 60 * 1000L;
+
+  private static TimeUnit TIME_UTIL = TimeUnit.MILLISECONDS;
 
   /**
    * redis ops. cache cluster should be used.
@@ -46,12 +59,6 @@ public class VerificationApplication {
 
   @Autowired
   private transient DeveloperService developerService;
-
-  private static long VERIFICATION_EXPIRE_TIME = 3 * 60 * 60 * 1000L;
-
-  private static long RESET_EXPIRE_TIME = 30 * 60 * 60 * 1000L;
-
-  private static TimeUnit TIME_UTIL = TimeUnit.MILLISECONDS;
 
   @Autowired
   private transient JavaMailSender javaMailSender;
@@ -68,12 +75,13 @@ public class VerificationApplication {
 
     String message = MailMessageMapper.createMessage(developerId, verificationCode);
 
-    SimpleMailMessage mailMessage = MailMessageMapper.build(email, subject, message);
+    SimpleMailMessage mailMessage = MailMessageMapper.build(email, VERIFY_SUBJECT, message);
 
     javaMailSender.send(mailMessage);
 
     redisTemplate.opsForValue()
-        .set(createRedisKey(developerId), verificationCode, VERIFICATION_EXPIRE_TIME, TIME_UTIL);
+        .set(String.format(VERIFY_KEY_FORMAT, developerId), verificationCode,
+            VERIFY_EXPIRE_TIME, TIME_UTIL);
   }
 
   /**
@@ -87,7 +95,7 @@ public class VerificationApplication {
       throw new NotExistException("Developer not exist");
     }
 
-    String redisKey = createRedisKey(developerId);
+    String redisKey = String.format(VERIFY_KEY_FORMAT, developerId);
     String requestCode = redisTemplate.opsForValue().get(redisKey).toString();
     if (!code.equals(requestCode)) {
       LOG.debug("VerificationCode is not match");
@@ -101,8 +109,6 @@ public class VerificationApplication {
 
   /**
    * 发送重置密码的token到开发者邮箱。
-   *
-   * @param email
    */
   public void sendResetToken(String email) {
     LOG.debug("Enter. email: {}.", email);
@@ -113,18 +119,27 @@ public class VerificationApplication {
 
     // TODO: 17/7/3
     String message = "" + resetToken;
-    SimpleMailMessage mailMessage = MailMessageMapper.build(email, "Reset password", message);
+
+    SimpleMailMessage mailMessage = MailMessageMapper.build(email, RESET_SUBJECT, message);
 
     javaMailSender.send(mailMessage);
 
-    redisTemplate.opsForValue().set(RESET_VERIFICATION_KEY + developer.getId(), resetToken,
-        RESET_EXPIRE_TIME, TIME_UTIL);
+    redisTemplate.opsForValue().
+        set(String.format(RESET_KEY_FORMAT, developer.getId()), resetToken,
+            RESET_EXPIRE_TIME, TIME_UTIL);
   }
 
-  /**
-   * Create key for redis.
-   */
-  private String createRedisKey(String developerId) {
-    return VERIFICATION_KEY + developerId;
+  @Async
+  public void resendVerifyEmail(String id) {
+    LOG.debug("Enter. id: {}.", id);
+
+    Developer developer = developerService.get(id);
+
+    if (developer == null) {
+      LOG.debug("Can not find developer: {}.", id);
+      throw new NotExistException("Developer not exist");
+    }
+
+    sendVerificationEmail(id, developer.getEmail());
   }
 }

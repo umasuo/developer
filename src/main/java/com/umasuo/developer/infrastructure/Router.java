@@ -39,5 +39,7 @@ public class Router {
    */
   public static final String DEVELOPER_SIGN_IN_STATUS = DEVELOPER_WITH_ID + "/status";
 
+  public static final String DEVELOPER_VERIFY = DEVELOPER_WITH_ID + "/verify";
 
+  public static final String DEVELOPER_RESET_PASSWORD = DEVELOPER_ROOT + "/reset-password";
 }
