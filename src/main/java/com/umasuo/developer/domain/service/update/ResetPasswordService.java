@@ -6,6 +6,7 @@ import com.umasuo.developer.application.dto.action.ResetPassword;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.infrastructure.update.UpdateAction;
 import com.umasuo.developer.infrastructure.util.PasswordUtil;
+import com.umasuo.developer.infrastructure.util.RedisKeyUtil;
 import com.umasuo.exception.ParametersException;
 import com.umasuo.model.Updater;
 
@@ -30,9 +31,6 @@ public class ResetPasswordService implements Updater<Developer, UpdateAction> {
   @Autowired
   private transient RedisTemplate redisTemplate;
 
-  @Value("${redis.key.reset}")
-  private String RESET_VERIFICATION_KEY;
-
   @Override
   public void handle(Developer developer, UpdateAction updateAction) {
 
@@ -40,7 +38,7 @@ public class ResetPasswordService implements Updater<Developer, UpdateAction> {
 
     String token = action.getToken();
 
-    String key = String.format(RESET_VERIFICATION_KEY, developer.getId());
+    String key = String.format(RedisKeyUtil.RESET_KEY_FORMAT, developer.getId());
 
     String requestToken = redisTemplate.opsForValue().get(key).toString();
 

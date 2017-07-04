@@ -53,14 +53,13 @@ public class StatusService {
    * 2，检查用户是否登陆
    * 3，登陆是否在有效期内
    *
-   * @param id       开发者ID
+   * @param id 开发者ID
    * @param tokenStr 传入的token string
    * @return 权限状态
    */
   public AuthStatus checkAuthStatus(String id, String tokenStr) {
     logger.debug("CheckSignInStatus: id: {}", id);
     AuthStatus authStatus = new AuthStatus();
-
 
     Token tokenInput = JwtUtil.parseToken(config.getSecret(), tokenStr);
     if (tokenInput == null || !tokenInput.getSubjectId().equals(id)) {
@@ -100,10 +99,6 @@ public class StatusService {
   /**
    * check if the developer is login and has the right scope.
    * this can only be accessed in internal net work.
-   *
-   * @param id
-   * @param scopes
-   * @return
    */
   public boolean checkSignInAndScope(String id, List<Scope> scopes) {
     //TODO finish later.
