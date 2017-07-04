@@ -39,10 +39,10 @@ public class VerificationApplication {
   @Value("${redis.key.reset}")
   private String RESET_KEY_FORMAT;
 
-  @Value("${email.VERIFY_SUBJECT.verify}")
+  @Value("${email.subject.verify}")
   private String VERIFY_SUBJECT;
 
-  @Value("${email.VERIFY_SUBJECT.reset}")
+  @Value("${email.subject.reset}")
   private String RESET_SUBJECT;
 
   private static long VERIFY_EXPIRE_TIME = 30 * 60 * 60 * 1000L;
@@ -82,6 +82,7 @@ public class VerificationApplication {
     redisTemplate.opsForValue()
         .set(String.format(VERIFY_KEY_FORMAT, developerId), verificationCode,
             VERIFY_EXPIRE_TIME, TIME_UTIL);
+    LOG.debug("Exit.");
   }
 
   /**
@@ -95,8 +96,8 @@ public class VerificationApplication {
       throw new NotExistException("Developer not exist");
     }
 
-    String redisKey = String.format(VERIFY_KEY_FORMAT, developerId);
-    String requestCode = redisTemplate.opsForValue().get(redisKey).toString();
+    String key = String.format(VERIFY_KEY_FORMAT, developerId);
+    String requestCode = redisTemplate.opsForValue().get(key).toString();
     if (!code.equals(requestCode)) {
       LOG.debug("VerificationCode is not match");
       throw new ParametersException("VerificationCode is not match");
@@ -104,7 +105,7 @@ public class VerificationApplication {
     developer.setStatus(AccountStatus.VERIFIED);
     developerService.save(developer);
 
-    redisTemplate.delete(redisKey);
+    redisTemplate.delete(key);
   }
 
   /**
@@ -141,5 +142,6 @@ public class VerificationApplication {
     }
 
     sendVerificationEmail(id, developer.getEmail());
+    LOG.debug("Exit.");
   }
 }

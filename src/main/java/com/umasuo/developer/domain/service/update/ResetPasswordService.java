@@ -50,5 +50,6 @@ public class ResetPasswordService implements Updater<Developer, UpdateAction> {
     }
 
     developer.setPassword(PasswordUtil.hashPassword(action.getNewPassword()));
+    redisTemplate.delete(key);
   }
 }
