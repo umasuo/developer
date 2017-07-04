@@ -4,6 +4,7 @@ import com.umasuo.developer.application.dto.mapper.MailMessageMapper;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.domain.service.DeveloperService;
 import com.umasuo.developer.infrastructure.enums.AccountStatus;
+import com.umasuo.developer.infrastructure.util.RedisKeyUtil;
 import com.umasuo.exception.NotExistException;
 import com.umasuo.exception.ParametersException;
 
@@ -33,17 +34,9 @@ public class VerificationApplication {
 
   private static final int CODE_LENGTH = 12;
 
-  @Value("${redis.key.verify}")
-  private String VERIFY_KEY_FORMAT;
+  private static final String VERIFY_SUBJECT = "Please verify your email address.";
 
-  @Value("${redis.key.reset}")
-  private String RESET_KEY_FORMAT;
-
-  @Value("${email.subject.verify}")
-  private String VERIFY_SUBJECT;
-
-  @Value("${email.subject.reset}")
-  private String RESET_SUBJECT;
+  private static final String RESET_SUBJECT = "Please reset password.";
 
   private static long VERIFY_EXPIRE_TIME = 30 * 60 * 60 * 1000L;
 
@@ -80,7 +73,7 @@ public class VerificationApplication {
     javaMailSender.send(mailMessage);
 
     redisTemplate.opsForValue()
-        .set(String.format(VERIFY_KEY_FORMAT, developerId), verificationCode,
+        .set(String.format(RedisKeyUtil.VERIFY_KEY_FORMAT, developerId), verificationCode,
             VERIFY_EXPIRE_TIME, TIME_UTIL);
     LOG.debug("Exit.");
   }
@@ -96,7 +89,7 @@ public class VerificationApplication {
       throw new NotExistException("Developer not exist");
     }
 
-    String key = String.format(VERIFY_KEY_FORMAT, developerId);
+    String key = String.format(RedisKeyUtil.VERIFY_KEY_FORMAT, developerId);
     String requestCode = redisTemplate.opsForValue().get(key).toString();
     if (!code.equals(requestCode)) {
       LOG.debug("VerificationCode is not match");
@@ -126,7 +119,7 @@ public class VerificationApplication {
     javaMailSender.send(mailMessage);
 
     redisTemplate.opsForValue().
-        set(String.format(RESET_KEY_FORMAT, developer.getId()), resetToken,
+        set(String.format(RedisKeyUtil.RESET_KEY_FORMAT, developer.getId()), resetToken,
             RESET_EXPIRE_TIME, TIME_UTIL);
   }
 

@@ -5,6 +5,8 @@ import com.umasuo.authentication.Scope;
 import com.umasuo.authentication.Token;
 import com.umasuo.developer.application.dto.AuthStatus;
 import com.umasuo.developer.infrastructure.configuration.AppConfig;
+import com.umasuo.developer.infrastructure.util.RedisKeyUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * for check login status, developer account status.s
@@ -42,6 +45,8 @@ public class StatusService {
   @Autowired
   private transient AppConfig config;
 
+  public static final long EXPIRE_TIME = 4 * 60 * 60 * 1000L;
+
   /**
    * 检查用户的权限状态。
    * 1，检查ID与token中的ID是否一致
@@ -65,7 +70,8 @@ public class StatusService {
     }
     authStatus.setDeveloperId(id);
 
-    Token token = (Token) redisTemplate.opsForHash().get(id, SignInApplication.SIGN_IN_CACHE_KEY);
+    String key = String.format(RedisKeyUtil.DEVELOPER_KEY_FORMAT, id);
+    Token token = (Token) redisTemplate.opsForHash().get(key, RedisKeyUtil.SIGN_IN_CACHE_KEY);
     if (token == null) {
       authStatus.setLogin(false);
       return authStatus;
@@ -78,7 +84,15 @@ public class StatusService {
       authStatus.setLogin(false);
       return authStatus;
     }
+
     authStatus.setLogin(true);
+
+    // 设置过期时间
+    redisTemplate.expire(key, EXPIRE_TIME, TimeUnit.MILLISECONDS);
+
+    token.setGenerateTime(curTime);
+
+    redisTemplate.boundHashOps(key).put(RedisKeyUtil.SIGN_IN_CACHE_KEY, token);
 
     return authStatus;
   }

@@ -8,7 +8,9 @@ import com.umasuo.developer.application.dto.mapper.DeveloperMapper;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.domain.service.DeveloperService;
 import com.umasuo.developer.infrastructure.util.PasswordUtil;
+import com.umasuo.developer.infrastructure.util.RedisKeyUtil;
 import com.umasuo.exception.PasswordErrorException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by umasuo on 17/3/6.
@@ -29,10 +32,7 @@ public class SignInApplication {
    */
   private final static Logger logger = LoggerFactory.getLogger(SignInApplication.class);
 
-  /**
-   * the key in mapper which in cache.
-   */
-  public final static String SIGN_IN_CACHE_KEY = "signin";
+  public static final long EXPIRE_TIME = 4 * 60 * 60 * 1000L;
 
   /**
    * JWT(json web token) update
@@ -80,7 +80,6 @@ public class SignInApplication {
     return result;
   }
 
-
   /**
    * cache sign in status to cache.
    * each developer has an mapper in cache for keep status data.
@@ -92,6 +91,8 @@ public class SignInApplication {
     Token token = jwtUtil.parseToken(tokenString);
     //todo cache key 的设置
     //cache the sigin result
-    redisTemplate.boundHashOps(id).put(SIGN_IN_CACHE_KEY, token);
+    String key = String.format(RedisKeyUtil.DEVELOPER_KEY_FORMAT, id);
+    redisTemplate.boundHashOps(key).put(RedisKeyUtil.SIGN_IN_CACHE_KEY, token);
+    redisTemplate.expire(key, EXPIRE_TIME, TimeUnit.MILLISECONDS);
   }
 }
