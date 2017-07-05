@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class SetOpenStatus implements UpdateAction{
 
+  private static final long serialVersionUID = -2773766503211755706L;
   /**
    * The Openable.
    */

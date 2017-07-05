@@ -14,6 +14,7 @@ public class ResetPassword{
   @NotNull
   private String developerId;
 
+  private static final long serialVersionUID = 5309491764291388935L;
   @NotNull
   private String token;
 

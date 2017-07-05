@@ -14,6 +14,7 @@ import javax.validation.constraints.Pattern;
 @Data
 public class ChangePassword implements UpdateAction {
 
+  private static final long serialVersionUID = 4824117085152571457L;
   @NotNull
   @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,}$")
   private String oldPassword;
