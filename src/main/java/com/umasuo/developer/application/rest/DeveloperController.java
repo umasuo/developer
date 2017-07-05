@@ -7,12 +7,15 @@ import static com.umasuo.developer.infrastructure.Router.DEVELOPER_WITH_ID;
 import static com.umasuo.developer.infrastructure.Router.ID;
 
 import com.umasuo.developer.application.dto.DeveloperView;
+import com.umasuo.developer.application.dto.action.ResetPassword;
+import com.umasuo.developer.application.service.DeveloperApplication;
 import com.umasuo.developer.application.service.VerificationApplication;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.domain.service.DeveloperService;
 import com.umasuo.developer.infrastructure.update.UpdateRequest;
 import com.umasuo.exception.AuthFailedException;
 
+import org.bouncycastle.cert.ocsp.Req;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +53,9 @@ public class DeveloperController {
 
   @Autowired
   private transient VerificationApplication verificationApplication;
+
+  @Autowired
+  private transient DeveloperApplication developerApplication;
 
   /**
    * Check if developer exist.
@@ -118,11 +124,18 @@ public class DeveloperController {
   }
 
   @PostMapping(value = DEVELOPER_RESET_PASSWORD)
-  public void resetPassword(@RequestParam String email) {
+  public void getResetPasswordCode(@RequestParam String email) {
     LOG.info("Enter. email: {}.", email);
 
     verificationApplication.sendResetToken(email);
 
+    LOG.info("Exit.");
+  }
+
+  @PutMapping(value = DEVELOPER_RESET_PASSWORD)
+  public void resetPassword(@RequestBody ResetPassword resetRequest) {
+    LOG.info("Enter.");
+    developerApplication.resetPassword(resetRequest);
     LOG.info("Exit.");
   }
 
