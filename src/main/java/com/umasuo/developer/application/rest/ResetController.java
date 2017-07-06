@@ -46,7 +46,9 @@ public class ResetController {
   @PutMapping(value = DEVELOPER_RESET_PASSWORD)
   public void resetPassword(@RequestBody ResetPassword resetRequest) {
     LOG.info("Enter.");
+
     developerApplication.resetPassword(resetRequest);
+
     LOG.info("Exit.");
   }
 }

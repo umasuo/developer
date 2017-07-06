@@ -47,7 +47,6 @@ public class DeveloperApplication{
     if (StringUtils.isBlank(requestToken)) {
       LOG.debug("Can not find reset password code for developer: {}.", developerId);
       throw new NotExistException("Reset password code not exist or expired");
-      // TODO: 17/7/5 返回一个验证码过期的跳转链接
     }
 
     if (!token.equals(requestToken)) {
