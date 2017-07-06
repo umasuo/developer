@@ -18,8 +18,8 @@ public class SignIn {
   /**
    * email.
    */
-  @Email
-  @NotNull
+  @Email(message = "Not a valid email")
+  @NotNull(message = "Email can not be null")
   private String email;
 
   /**
@@ -30,8 +30,8 @@ public class SignIn {
    * .{8,}             # anything, at least eight places though
    * $                 # end-of-string
    */
-  @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,}$")
-  @NotNull
+  @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,}$", message = "Not a valid password")
+  @NotNull(message = "Password can not be null")
   private String password;
 
   @Override
