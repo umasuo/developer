@@ -123,7 +123,6 @@ public class VerificationApplication {
             RESET_EXPIRE_TIME, TIME_UTIL);
   }
 
-  @Async
   public void resendVerifyEmail(String id) {
     LOG.debug("Enter. id: {}.", id);
 
