@@ -134,7 +134,13 @@ public class VerificationApplication {
       throw new NotExistException("Developer not exist");
     }
 
+    if (developer.getStatus().equals(AccountStatus.VERIFIED)) {
+      LOG.debug("Developer has bean verified, do not need to verify again.");
+      return;
+    }
+
     sendVerificationEmail(id, developer.getEmail());
+
     LOG.debug("Exit.");
   }
 }

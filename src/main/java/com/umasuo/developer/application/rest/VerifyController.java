@@ -10,15 +10,19 @@ import com.umasuo.exception.AuthFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by Davis on 17/7/6.
  */
+@CrossOrigin
+@RestController
 public class VerifyController {
 
   /**
@@ -40,7 +44,7 @@ public class VerifyController {
   }
 
   @PostMapping(value = DEVELOPER_VERIFY)
-  public void getVerifyEmail(@PathVariable(ID) String id,
+  public void sendVerifyEmail(@PathVariable(ID) String id,
       @RequestHeader("developerId") String developerId) {
     LOG.info("Enter. id: {}, developerId: {}.", id, developerId);
 
