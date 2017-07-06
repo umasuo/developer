@@ -2,6 +2,8 @@ package com.umasuo.developer.application.service;
 
 import com.umasuo.authentication.JwtUtil;
 import com.umasuo.authentication.Token;
+import com.umasuo.developer.infrastructure.util.RedisKeyUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,7 @@ public class SignOutApplication {
     String id = token.getSubjectId();
     Assert.notNull(id);
     // 清理该开发者的token
-    redisTemplate.delete(id);
+    String key = String.format(RedisKeyUtil.DEVELOPER_KEY_FORMAT, id);
+    redisTemplate.delete(key);
   }
 }
