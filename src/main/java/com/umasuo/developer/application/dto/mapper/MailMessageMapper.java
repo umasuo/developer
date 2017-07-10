@@ -29,10 +29,16 @@ public final class MailMessageMapper {
     return mailMessage;
   }
 
-  public static String createMessage(String developerId, String verificationCode) {
+  public static String createVerifyMessage(String developerId, String verificationCode) {
     // TODO: 17/7/3
     String msg =
         "http://localhost:8804/v1/developers/" + developerId + "/verify?code=" + verificationCode;
     return msg;
+  }
+
+  public static String createResetMessage(String developerId, String resetToken) {
+    // TODO: 17/7/10
+    String message = String.format("developerId: %s, token: %s", developerId, resetToken);
+    return message;
   }
 }

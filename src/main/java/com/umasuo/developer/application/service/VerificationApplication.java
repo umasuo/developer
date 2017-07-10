@@ -12,11 +12,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -42,8 +38,6 @@ public class VerificationApplication {
 
   private static long RESET_EXPIRE_TIME = 30 * 60 * 60 * 1000L;
 
-  private static TimeUnit TIME_UTIL = TimeUnit.MILLISECONDS;
-
   /**
    * redis ops. cache cluster should be used.
    */
@@ -54,27 +48,25 @@ public class VerificationApplication {
   private transient DeveloperService developerService;
 
   @Autowired
-  private transient JavaMailSender javaMailSender;
+  private transient MailSender mailSender;
 
   /**
    * 发送验证邮件。
    * 使用Async实现异步调用，之后考虑使用其它方法实现。
    */
-  @Async
   public void sendVerificationEmail(String developerId, String email) {
     LOG.debug("Enter. developerId: {}, email: {}.", developerId, email);
 
     String verificationCode = RandomStringUtils.randomAlphanumeric(CODE_LENGTH);
 
-    String message = MailMessageMapper.createMessage(developerId, verificationCode);
-
-    SimpleMailMessage mailMessage = MailMessageMapper.build(email, VERIFY_SUBJECT, message);
-
-    javaMailSender.send(mailMessage);
-
     redisTemplate.opsForValue()
         .set(String.format(RedisKeyUtil.VERIFY_KEY_FORMAT, developerId), verificationCode,
-            VERIFY_EXPIRE_TIME, TIME_UTIL);
+            VERIFY_EXPIRE_TIME, TimeUnit.MILLISECONDS);
+
+    String message = MailMessageMapper.createVerifyMessage(developerId, verificationCode);
+
+    mailSender.send(email, VERIFY_SUBJECT, message);
+
     LOG.debug("Exit.");
   }
 
@@ -111,16 +103,14 @@ public class VerificationApplication {
 
     String resetToken = RandomStringUtils.randomAlphanumeric(CODE_LENGTH);
 
-    // TODO: 17/7/3
-    String message = "" + resetToken;
-
-    SimpleMailMessage mailMessage = MailMessageMapper.build(email, RESET_SUBJECT, message);
-
-    javaMailSender.send(mailMessage);
-
     redisTemplate.opsForValue().
         set(String.format(RedisKeyUtil.RESET_KEY_FORMAT, developer.getId()), resetToken,
-            RESET_EXPIRE_TIME, TIME_UTIL);
+            RESET_EXPIRE_TIME, TimeUnit.MILLISECONDS);
+
+    String message = MailMessageMapper.createResetMessage(developer.getId(), resetToken);
+
+    mailSender.send(email, RESET_SUBJECT, message);
+
   }
 
   public void resendVerifyEmail(String id) {
