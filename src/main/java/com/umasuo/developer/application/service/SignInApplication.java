@@ -88,11 +88,13 @@ public class SignInApplication {
    * @param tokenString token string
    */
   private void cacheSignInStatus(String id, String tokenString) {
+    logger.debug("Enter.");
     Token token = jwtUtil.parseToken(tokenString);
     //todo cache key 的设置
     //cache the sigin result
     String key = String.format(RedisKeyUtil.DEVELOPER_KEY_FORMAT, id);
     redisTemplate.boundHashOps(key).put(RedisKeyUtil.SIGN_IN_CACHE_KEY, token);
     redisTemplate.expire(key, EXPIRE_TIME, TimeUnit.MILLISECONDS);
+    logger.debug("Exit.");
   }
 }

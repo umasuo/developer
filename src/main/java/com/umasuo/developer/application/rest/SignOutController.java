@@ -1,5 +1,7 @@
 package com.umasuo.developer.application.rest;
 
+import static com.umasuo.developer.infrastructure.Router.ID;
+
 import com.umasuo.developer.application.service.SignOutApplication;
 import com.umasuo.developer.infrastructure.Router;
 import org.slf4j.Logger;
@@ -7,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +41,7 @@ public class SignOutController {
    * @return
    */
   @DeleteMapping(value = Router.DEVELOPER_SIGN_OUT)
-  public void signIn(@RequestHeader @Valid String token) {
+  public void signIn(@PathVariable(ID) String id, @RequestHeader @Valid String token) {
     logger.info("Token: {}", token);
 
     signOutService.signOut(token);
