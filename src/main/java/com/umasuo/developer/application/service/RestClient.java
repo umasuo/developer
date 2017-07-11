@@ -35,8 +35,8 @@ public class RestClient {
   /**
    * device-definition service uri.
    */
-  @Value("${device-definition.service.uri:http://device-definition/}")
-  private transient String deviceDefinitionUrl;
+  @Value("${product.service.uri:http://product/}")
+  private transient String productUrl;
 
   /**
    * RestTemplate.
@@ -69,7 +69,7 @@ public class RestClient {
     headers.set("developerId", developerId);
     HttpEntity entity = new HttpEntity(headers);
 
-    String url = deviceDefinitionUrl + deviceDefinitionId;
+    String url = productUrl + deviceDefinitionId;
     DeviceDefinitionView result = null;
     try {
 

@@ -43,6 +43,6 @@ jwt:
 user:
   service:
     uri: http://localhost:8809/
-device-definition:
+product:
   service:
     uri: http://localhost:8805/
