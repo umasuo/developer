@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/umasuo/developer.svg?branch=master)](https://travis-ci.org/umasuo/developer)
 # 开发者服务
 开发者服务，提供开发者注册、登录，权限验证等功能。
 主要功能如下：
