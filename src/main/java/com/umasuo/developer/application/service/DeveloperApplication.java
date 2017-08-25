@@ -2,7 +2,9 @@ package com.umasuo.developer.application.service;
 
 import static com.umasuo.developer.infrastructure.update.UpdateActionUtils.RESET_PASSWORD;
 
+import com.umasuo.developer.application.dto.DeveloperView;
 import com.umasuo.developer.application.dto.action.ResetPassword;
+import com.umasuo.developer.application.dto.mapper.DeveloperMapper;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.domain.service.DeveloperService;
 import com.umasuo.developer.infrastructure.util.PasswordUtil;
@@ -17,11 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by Davis on 17/7/3.
  */
 @Service(RESET_PASSWORD)
-public class DeveloperApplication{
+public class DeveloperApplication {
 
   /**
    * Logger.
@@ -63,5 +67,17 @@ public class DeveloperApplication{
 
     redisTemplate.delete(key);
     // TODO: 17/7/5 返回一个成功的跳转链接
+  }
+
+  public List<DeveloperView> getAllDevelopers() {
+    LOG.debug("Enter.");
+
+    List<Developer> developers = developerService.getAllDevelopers();
+
+    List<DeveloperView> result = DeveloperMapper.toModel(developers);
+
+    LOG.debug("Exit. developer size: {}.", result.size());
+
+    return result;
   }
 }

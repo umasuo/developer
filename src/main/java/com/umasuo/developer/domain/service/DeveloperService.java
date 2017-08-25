@@ -136,6 +136,26 @@ public class DeveloperService {
     return updatedDeveloper;
   }
 
+  public Long countDevelopers() {
+    logger.debug("Enter.");
+
+    long count = repository.count();
+
+    logger.debug("Exit. developer count: {}.", count);
+
+    return count;
+  }
+
+  public List<Developer> getAllDevelopers() {
+    logger.debug("Enter.");
+
+    List<Developer> developers = repository.findAll();
+
+    logger.debug("Exit. developer size: {}.", developers.size());
+
+    return developers;
+  }
+
   /**
    * check the version.
    *

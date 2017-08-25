@@ -103,4 +103,26 @@ public class DeveloperController {
     LOG.debug("Exit.");
     return updatedDeveloper;
   }
+
+  @GetMapping("/v1/admin/developers/count")
+  public Long countDevelopers() {
+    LOG.info("Enter.");
+
+    Long count = developerService.countDevelopers();
+
+    LOG.info("Exit. developer count: {}.", count);
+
+    return count;
+  }
+
+  @GetMapping("/v1/admin/developers")
+  public List<DeveloperView> getAllDevelopers() {
+    LOG.info("Enter.");
+
+    List<DeveloperView> developers = developerApplication.getAllDevelopers();
+
+    LOG.debug("Exit. developer size: {}.", developers.size());
+
+    return developers;
+  }
 }
