@@ -11,7 +11,6 @@ import com.umasuo.developer.infrastructure.util.PasswordUtil;
 import com.umasuo.exception.AlreadyExistException;
 import com.umasuo.exception.ConflictException;
 import com.umasuo.exception.NotExistException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +19,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by umasuo on 17/3/6.
+ * Developer service.
  */
 @Service
 public class DeveloperService {
 
   /**
-   * logger.
+   * LOGGER.
    */
-  private final static Logger logger = LoggerFactory.getLogger(DeveloperService.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(DeveloperService.class);
 
   /**
    * repository.
@@ -37,6 +36,9 @@ public class DeveloperService {
   @Autowired
   private transient DeveloperRepository repository;
 
+  /**
+   * Developer Update service.
+   */
   @Autowired
   private transient DeveloperUpdaterService updaterService;
 
@@ -47,7 +49,7 @@ public class DeveloperService {
    * @return result. developer
    */
   public Developer save(Developer developer) {
-    logger.debug("CreateDeveloper: {}", developer);
+    LOGGER.debug("CreateDeveloper: {}", developer);
     return this.repository.save(developer);
   }
 
@@ -59,7 +61,7 @@ public class DeveloperService {
    * @return created developer
    */
   public Developer create(String email, String password) {
-    logger.debug("CreateDeveloper: email:{}", email);
+    LOGGER.debug("CreateDeveloper: email:{}", email);
     Developer developer = this.repository.findOneByEmail(email);
     if (developer != null) {
       throw new AlreadyExistException("Developer already existing.");
@@ -82,7 +84,7 @@ public class DeveloperService {
    * @return existing developer.
    */
   public Developer get(String id) {
-    logger.debug("GetDeveloper: id: {}", id);
+    LOGGER.debug("GetDeveloper: id: {}", id);
     return this.repository.findOne(id);
   }
 
@@ -93,7 +95,7 @@ public class DeveloperService {
    * @return with email
    */
   public Developer getWithEmail(String email) {
-    logger.debug("GetDeveloper: email: {}", email);
+    LOGGER.debug("GetDeveloper: email: {}", email);
     Developer developer = this.repository.findOneByEmail(email);
     if (developer == null) {
       throw new NotExistException("Developer not exist.");
@@ -107,21 +109,29 @@ public class DeveloperService {
    * @return list of DeveloperView
    */
   public List<DeveloperView> getOpenDeveloper() {
-    logger.debug("Enter.");
+    LOGGER.debug("Enter.");
 
     List<Developer> openDevelopers = repository.findByOpenable(true);
 
-    List<DeveloperView> result = DeveloperMapper.toModel(openDevelopers);
+    List<DeveloperView> result = DeveloperMapper.toView(openDevelopers);
 
-    logger.debug("Exit. open developer size: {}.", result.size());
+    LOGGER.debug("Exit. open developer size: {}.", result.size());
 
     return result;
   }
 
+  /**
+   * Update developer.
+   *
+   * @param id
+   * @param version
+   * @param actions
+   * @return
+   */
   public DeveloperView update(String id, Integer version, List<UpdateAction> actions) {
     Developer developer = repository.findOne(id);
     if (developer == null) {
-      logger.debug("Developer: {} not exist.", id);
+      LOGGER.debug("Developer: {} not exist.", id);
       throw new NotExistException("Developer not exist");
     }
 
@@ -131,27 +141,37 @@ public class DeveloperService {
 
     repository.save(developer);
 
-    DeveloperView updatedDeveloper = DeveloperMapper.toModel(developer);
+    DeveloperView updatedDeveloper = DeveloperMapper.toView(developer);
 
     return updatedDeveloper;
   }
 
+  /**
+   * Count developers.
+   *
+   * @return
+   */
   public Long countDevelopers() {
-    logger.debug("Enter.");
+    LOGGER.debug("Enter.");
 
     long count = repository.count();
 
-    logger.debug("Exit. developer count: {}.", count);
+    LOGGER.debug("Exit. developer count: {}.", count);
 
     return count;
   }
 
+  /**
+   * Get all developers.
+   *
+   * @return
+   */
   public List<Developer> getAllDevelopers() {
-    logger.debug("Enter.");
+    LOGGER.debug("Enter.");
 
     List<Developer> developers = repository.findAll();
 
-    logger.debug("Exit. developer size: {}.", developers.size());
+    LOGGER.debug("Exit. developer size: {}.", developers.size());
 
     return developers;
   }
@@ -164,7 +184,7 @@ public class DeveloperService {
    */
   private void checkVersion(Integer inputVersion, Integer existVersion) {
     if (!inputVersion.equals(existVersion)) {
-      logger.debug("Developer version is not correct.");
+      LOGGER.debug("Developer version is not correct.");
       throw new ConflictException("Developer version is not correct.");
     }
   }

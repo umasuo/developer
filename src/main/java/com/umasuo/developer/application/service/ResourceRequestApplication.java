@@ -15,7 +15,6 @@ import com.umasuo.developer.infrastructure.validator.ExistRequestValidator;
 import com.umasuo.developer.infrastructure.validator.FeedBackValidator;
 import com.umasuo.exception.AuthFailedException;
 import com.umasuo.exception.NotExistException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +26,9 @@ import java.util.function.Consumer;
 
 /**
  * ResourceRequest application.
- *
- * Created by Davis on 17/6/9.
- *
+ * <p>
+ * Resource request application.
+ * <p>
  * todo 暂时没用
  */
 @Service
@@ -44,25 +43,25 @@ public class ResourceRequestApplication {
    * The Resource request service.
    */
   @Autowired
-  private ResourceRequestService resourceRequestService;
+  private transient ResourceRequestService resourceRequestService;
 
   /**
    * The Resource permission servce.
    */
   @Autowired
-  private ResourcePermissionService resourcePermissionServce;
+  private transient ResourcePermissionService resourcePermissionServce;
 
   /**
    * The Rest client.
    */
   @Autowired
-  private RestClient restClient;
+  private transient RestClient restClient;
 
   /**
    * Create resource request.
    *
    * @param applicantId the applicant id
-   * @param request the request
+   * @param request     the request
    * @return the resource request view
    */
   public ResourceRequestView create(String applicantId, ResourceRequestDraft request) {
@@ -70,7 +69,7 @@ public class ResourceRequestApplication {
 
     // 检查acceptor是否拥有该device，已经检查该device是否拥有对应的reference（目前只是data）
     if (StringUtils.isNotBlank(request.getDeviceDefinitionId())) {
-    DeviceDefinitionView deviceDefinitionView = restClient
+      DeviceDefinitionView deviceDefinitionView = restClient
         .getDeviceDefinition(request.getDeviceDefinitionId(), request.getAcceptorId());
       DeviceDefinitionValidator.validate(deviceDefinitionView, request);
     }
@@ -123,12 +122,12 @@ public class ResourceRequestApplication {
    * Reply request.
    *
    * @param developerId the developer id
-   * @param requestId the request id
-   * @param reply the reply
+   * @param requestId   the request id
+   * @param reply       the reply
    * @return the resource request view
    */
   public ResourceRequestView replyRequest(String developerId, String requestId,
-      ReplyRequest reply) {
+                                          ReplyRequest reply) {
     LOG.debug("Enter. developerId: {}, requestId: {}, reply: {}.", developerId, requestId, reply);
 
     ResourceRequest request = resourceRequestService.findOne(requestId);
@@ -156,11 +155,11 @@ public class ResourceRequestApplication {
    * Feed back for applicant.
    *
    * @param developerId the developer id
-   * @param requestId the request id
+   * @param requestId   the request id
    * @return the list
    */
   public List<ResourceRequestView> feedBackForApplicant(String developerId,
-      List<String> requestId) {
+                                                        List<String> requestId) {
     LOG.debug("Enter. developerId: {}, requestId: {}.", developerId, requestId);
 
     List<ResourceRequest> requests = resourceRequestService.findAll(requestId);
@@ -182,11 +181,11 @@ public class ResourceRequestApplication {
    * Feed back for acceptor.
    *
    * @param developerId the developer id
-   * @param requestId the request id
+   * @param requestId   the request id
    * @return the list
    */
   public List<ResourceRequestView> feedBackForAcceptor(String developerId,
-      List<String> requestId) {
+                                                       List<String> requestId) {
     LOG.debug("Enter. developerId: {}, requestId: {}.", developerId, requestId);
 
     List<ResourceRequest> requests = resourceRequestService.findAll(requestId);
@@ -194,7 +193,7 @@ public class ResourceRequestApplication {
     FeedBackValidator.validateAcceptorFeedBackAuth(developerId, requests);
 
     Consumer<ResourceRequest> feedBackConsumer =
-        request -> request.setReplyRequest(ReplyRequest.VIEWED);
+      request -> request.setReplyRequest(ReplyRequest.VIEWED);
     requests.stream().forEach(feedBackConsumer);
     List<ResourceRequest> feedBackedRequests = resourceRequestService.saveAll(requests);
 
@@ -209,7 +208,7 @@ public class ResourceRequestApplication {
    * Handle reply.
    *
    * @param request the ResourceRequest
-   * @param reply the ReplyRequest
+   * @param reply   the ReplyRequest
    */
   private void handlerReply(ResourceRequest request, ReplyRequest reply) {
     request.setReplyRequest(reply);
@@ -218,6 +217,10 @@ public class ResourceRequestApplication {
       case AGREE:
         ResourcePermission permission = ResourcePermissionMapper.build(request);
         resourcePermissionServce.save(permission);
+        break;
+      case DISAGREE:
+      case UNVIEW:
+      case VIEWED:
         break;
       default:
         break;

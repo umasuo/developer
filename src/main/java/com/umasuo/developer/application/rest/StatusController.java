@@ -16,15 +16,15 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /**
- * Created by umasuo on 17/3/7.
+ * Status controller.
  */
 @RestController
 @CrossOrigin
 public class StatusController {
   /**
-   * logger.
+   * LOGGER.
    */
-  private final static Logger logger = LoggerFactory.getLogger(StatusController.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(StatusController.class);
 
   /**
    * status service.
@@ -36,18 +36,18 @@ public class StatusController {
    * 检查开发者权限：是否已经登陆，是否拥有相应权限，token与ID是否对应等。
    * 内部接口，api-gateway不配置相关的路径。
    *
-   * @param id 开发者ID
-   * @param token       token string
+   * @param id    开发者ID
+   * @param token token string
    * @return Auth Status
    */
   @GetMapping(value = Router.DEVELOPER_SIGN_IN_STATUS)
   public AuthStatus getAuthStatus(@PathVariable String id,
                                   @RequestParam @Valid @NotNull String token) {
-    logger.info("Enter. developerId: {}, tokenStr: {}.", id, token);
+    LOGGER.info("Enter. developerId: {}, tokenStr: {}.", id, token);
 
     AuthStatus status = statusService.checkAuthStatus(id, token);
 
-    logger.info("Exit: authStatus: {}", status);
+    LOGGER.info("Exit. authStatus: {}", status);
     return status;
   }
 }

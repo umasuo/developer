@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 /**
- * Created by umasuo on 17/3/7.
+ * Sign up controller.
  */
 @CrossOrigin
 @RestController
 public class SignUpController {
 
   /**
-   * logger.
+   * LOGGER.
    */
-  private final static Logger logger = LoggerFactory.getLogger(SignInController.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(SignInController.class);
 
   /**
    * sign in service.
@@ -38,7 +38,7 @@ public class SignUpController {
    */
   @PostMapping(value = Router.DEVELOPER_SIGN_UP)
   public void signUp(@RequestBody @Valid SignIn signUp) {
-    logger.info("SignUp: {}", signUp);
+    LOGGER.info("SignUp: {}", signUp);
 
     //TODO 需要添加用户验证
     signUpService.signUp(signUp.getEmail(), signUp.getPassword());

@@ -23,17 +23,20 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 /**
- * Created by Davis on 17/6/9.
+ * Resource request.
  */
 @Data
 @Entity
 @Table(name = "resource_request")
 @EntityListeners(AuditingEntityListener.class)
 @TypeDef(name = "List", typeClass = JSONBUserType.class, parameters = {
-    @Parameter(name = JSONBUserType.CLASS, value = "java.util.List")
+  @Parameter(name = JSONBUserType.CLASS, value = "java.util.List")
 })
 public class ResourceRequest {
 
+  /**
+   * Request id.
+   */
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")

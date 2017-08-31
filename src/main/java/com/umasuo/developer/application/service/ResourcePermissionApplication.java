@@ -8,7 +8,6 @@ import com.umasuo.developer.application.dto.mapper.UserPermissionRequestMapper;
 import com.umasuo.developer.domain.model.ResourcePermission;
 import com.umasuo.developer.domain.service.ResourcePermissionService;
 import com.umasuo.developer.infrastructure.validator.PermissionValidator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by Davis on 17/6/9.
+ * Resource permission application.
  * todo 暂时没用
  */
 @Service
@@ -26,19 +25,19 @@ public class ResourcePermissionApplication {
   /**
    * Logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(ResourcePermissionApplication.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ResourcePermissionApplication.class);
 
   /**
    * The Permission service.
    */
   @Autowired
-  private ResourcePermissionService permissionService;
+  private transient ResourcePermissionService permissionService;
 
   /**
    * The Rest client.
    */
   @Autowired
-  private RestClient restClient;
+  private transient RestClient restClient;
 
   /**
    * Find permission.
@@ -47,12 +46,12 @@ public class ResourcePermissionApplication {
    * @return the list
    */
   public List<ResourcePermissionView> findByApplicant(String applicantId) {
-    LOG.debug("Enter. applicantId: {}.", applicantId);
+    LOGGER.debug("Enter. applicantId: {}.", applicantId);
 
     List<ResourcePermission> permissions = permissionService.findByApplicant(applicantId);
     List<ResourcePermissionView> result = ResourcePermissionMapper.toModel(permissions);
 
-    LOG.debug("Exit. permission size: {}.", result.size());
+    LOGGER.debug("Exit. permission size: {}.", result.size());
 
     return result;
   }
@@ -64,12 +63,12 @@ public class ResourcePermissionApplication {
    * @return the list
    */
   public List<ResourcePermissionView> findByAcceptor(String acceptorId) {
-    LOG.debug("Enter. acceptorId: {}.", acceptorId);
+    LOGGER.debug("Enter. acceptorId: {}.", acceptorId);
 
     List<ResourcePermission> permissions = permissionService.findByAcceptor(acceptorId);
     List<ResourcePermissionView> result = ResourcePermissionMapper.toModel(permissions);
 
-    LOG.debug("Exit. permission size: {}.", result.size());
+    LOGGER.debug("Exit. permission size: {}.", result.size());
 
     return result;
   }
@@ -77,20 +76,20 @@ public class ResourcePermissionApplication {
   /**
    * Handle user permission request.
    *
-   * @param userId the user id
+   * @param userId  the user id
    * @param request the request
    */
   public void handleUserPermissionRequest(String userId, PermissionRequest request) {
-    LOG.info("Enter. userId: {}, request: {}.", userId, request);
+    LOGGER.info("Enter. userId: {}, request: {}.", userId, request);
 
     // 1. 查看developer是否有对应permission
     List<ResourcePermission> permissions = permissionService
-        .findPermissions(request.getApplicantId(), request.getAcceptorId());
+      .findPermissions(request.getApplicantId(), request.getAcceptorId());
     PermissionValidator.validateDeveloper(request, permissions);
     // 2. 请求转发到user service
     UserPermissionRequest permissionRequest = UserPermissionRequestMapper.build(userId, request);
     restClient.forwardUserRequest(permissionRequest);
 
-    LOG.info("Exit.");
+    LOGGER.info("Exit.");
   }
 }

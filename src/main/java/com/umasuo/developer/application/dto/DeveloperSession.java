@@ -1,37 +1,49 @@
 package com.umasuo.developer.application.dto;
 
+import lombok.Data;
 
 import java.io.Serializable;
 
 /**
- * Sign in result.
+ * Developer session.
  */
-public class SignInResult implements Serializable {
-
+@Data
+public class DeveloperSession implements Serializable {
   /**
    * Auto generated serial version id.
    */
-  private static final long serialVersionUID = -5118543908111419503L;
+  private static final long serialVersionUID = 3640903092407994272L;
 
   /**
-   * customer for view.
+   * Developer view.
    */
   private DeveloperView developerView;
 
   /**
-   * String token.
+   * Token.
    */
   private String token;
 
   /**
-   * Constructor.
+   * last active time.
+   */
+  private long lastActiveTime;
+
+  /**
+   * Should move it to config.
+   */
+  public static final long EXPIRE_IN = 2 * 60 * 60 * 1000L;//2 hour
+
+  /**
+   * constructor with parameters.
    *
    * @param developerView
    * @param token
    */
-  public SignInResult(DeveloperView developerView, String token) {
+  public DeveloperSession(DeveloperView developerView, String token) {
     this.developerView = developerView;
     this.token = token;
+    lastActiveTime = System.currentTimeMillis();
   }
 
   /**
@@ -69,4 +81,23 @@ public class SignInResult implements Serializable {
   public void setToken(String token) {
     this.token = token;
   }
+
+  /**
+   * Getter.
+   *
+   * @return
+   */
+  public long getLastActiveTime() {
+    return lastActiveTime;
+  }
+
+  /**
+   * Setter.
+   *
+   * @return
+   */
+  public void setLastActiveTime(long lastActiveTime) {
+    this.lastActiveTime = lastActiveTime;
+  }
+
 }

@@ -3,14 +3,19 @@ package com.umasuo.developer.application.dto;
 import lombok.Data;
 
 /**
- * 用户权限状态，包含：是否登陆，所拥有的权限（scope）
- * Created by umasuo on 17/6/1.
+ * Developer sign in status and it's scopes.
  */
 @Data
 public class AuthStatus {
 
+  /**
+   * Developer id.
+   */
   private String developerId;
 
+  /**
+   * Is login.
+   */
   private boolean isLogin;
 
   //TODO 后期添加scope等控制

@@ -7,19 +7,17 @@ import com.umasuo.developer.infrastructure.enums.AccountStatus;
 import com.umasuo.developer.infrastructure.util.RedisKeyUtil;
 import com.umasuo.exception.NotExistException;
 import com.umasuo.exception.ParametersException;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by Davis on 17/7/3.
+ * VerificationApplication.
  */
 @Service
 public class VerificationApplication {
@@ -29,15 +27,30 @@ public class VerificationApplication {
    */
   private static final Logger LOG = LoggerFactory.getLogger(VerificationApplication.class);
 
+  /**
+   * Length of.
+   */
   private static final int CODE_LENGTH = 12;
 
+  /**
+   * Verify subject.
+   */
   private static final String VERIFY_SUBJECT = "Please verify your email address.";
 
+  /**
+   * Reset subject.
+   */
   private static final String RESET_SUBJECT = "Please reset password.";
 
-  private static long VERIFY_EXPIRE_TIME = 30 * 60 * 60 * 1000L;
+  /**
+   * Verify token expire time.
+   */
+  private static final long VERIFY_EXPIRE_TIME = 30 * 60 * 60 * 1000L;
 
-  private static long RESET_EXPIRE_TIME = 30 * 60 * 60 * 1000L;
+  /**
+   * Reset token expire time.
+   */
+  private static final long RESET_EXPIRE_TIME = 30 * 60 * 60 * 1000L;
 
   /**
    * redis ops. cache cluster should be used.
@@ -45,9 +58,15 @@ public class VerificationApplication {
   @Autowired
   private transient RedisTemplate redisTemplate;
 
+  /**
+   * Developer service.
+   */
   @Autowired
   private transient DeveloperService developerService;
 
+  /**
+   * Mail sender.
+   */
   @Autowired
   private transient MailSender mailSender;
 
@@ -61,8 +80,8 @@ public class VerificationApplication {
     String verificationCode = RandomStringUtils.randomAlphanumeric(CODE_LENGTH);
 
     redisTemplate.opsForValue()
-        .set(String.format(RedisKeyUtil.VERIFY_KEY_FORMAT, developerId), verificationCode,
-            VERIFY_EXPIRE_TIME, TimeUnit.MILLISECONDS);
+      .set(String.format(RedisKeyUtil.VERIFY_KEY_FORMAT, developerId), verificationCode,
+        VERIFY_EXPIRE_TIME, TimeUnit.MILLISECONDS);
 
     String message = MailMessageMapper.createVerifyMessage(developerId, verificationCode);
 
@@ -72,7 +91,10 @@ public class VerificationApplication {
   }
 
   /**
-   * 验证邮箱。
+   * Verify email
+   *
+   * @param developerId
+   * @param code
    */
   public void verifyEmail(String developerId, String code) {
     LOG.debug("Enter. developerId: {}, verificationCode: {}.", developerId, code);
@@ -95,7 +117,9 @@ public class VerificationApplication {
   }
 
   /**
-   * 发送重置密码的token到开发者邮箱。
+   * Send reset password link to developer's email.
+   *
+   * @param email
    */
   public void sendResetToken(String email) {
     LOG.debug("Enter. email: {}.", email);
@@ -105,8 +129,8 @@ public class VerificationApplication {
     String resetToken = RandomStringUtils.randomAlphanumeric(CODE_LENGTH);
 
     redisTemplate.opsForValue().
-        set(String.format(RedisKeyUtil.RESET_KEY_FORMAT, developer.getId()), resetToken,
-            RESET_EXPIRE_TIME, TimeUnit.MILLISECONDS);
+      set(String.format(RedisKeyUtil.RESET_KEY_FORMAT, developer.getId()), resetToken,
+        RESET_EXPIRE_TIME, TimeUnit.MILLISECONDS);
 
     String message = MailMessageMapper.createResetMessage(developer.getId(), resetToken);
 
@@ -114,6 +138,11 @@ public class VerificationApplication {
 
   }
 
+  /**
+   * Resend verify email.
+   *
+   * @param id
+   */
   public void resendVerifyEmail(String id) {
     LOG.debug("Enter. id: {}.", id);
 

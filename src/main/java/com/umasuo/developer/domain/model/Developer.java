@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 /**
- * Created by umasuo on 17/3/6.
+ * Developer model.
  */
 @Entity
 @Table(name = "developer")
@@ -26,6 +26,9 @@ import javax.persistence.Version;
 @EntityListeners(AuditingEntityListener.class)
 public class Developer {
 
+  /**
+   * Developer id in uuid.
+   */
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -80,17 +83,21 @@ public class Developer {
    */
   private Boolean openable = false;
 
-
+  /**
+   * To string method.
+   *
+   * @return
+   */
   @Override
   public String toString() {
     return "Developer{"
-        + "id='" + id + '\''
-        + ", createdAt=" + createdAt
-        + ", lastModifiedAt=" + lastModifiedAt
-        + ", version=" + version
-        + ", email='" + email + '\''
-        + ", phone='" + phone + '\''
-        + ", openable='" + openable + '\''
-        + '}';
+      + "id='" + id + '\''
+      + ", createdAt=" + createdAt
+      + ", lastModifiedAt=" + lastModifiedAt
+      + ", version=" + version
+      + ", email='" + email + '\''
+      + ", phone='" + phone + '\''
+      + ", openable='" + openable + '\''
+      + '}';
   }
 }

@@ -6,13 +6,18 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by umasuo on 17/6/1.
+ * Device definition view.
  */
 @Data
 public class DeviceDefinitionView implements Serializable {
-
+  /**
+   * Auto generated serial version id.
+   */
   private static final long serialVersionUID = -8662294173374891858L;
 
+  /**
+   * Device definition id.
+   */
   private String id;
 
   /**
@@ -67,10 +72,34 @@ public class DeviceDefinitionView implements Serializable {
   private Boolean openable = false;
 }
 
+/**
+ * Device status.
+ */
 enum DeviceStatus {
-  UNPUBLISHED, PUBLISHED
+  /**
+   * Unpublished.
+   */
+  UNPUBLISHED,
+  /**
+   * Published.
+   */
+  PUBLISHED
 }
 
+/**
+ * Device type.
+ */
 enum DeviceType {
-  BLUETOOTH, WIFI, GPRS
+  /**
+   * Blue tooth.
+   */
+  BLUETOOTH,
+  /**
+   * Wifi.
+   */
+  WIFI,
+  /**
+   * GPRS.
+   */
+  GPRS
 }

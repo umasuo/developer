@@ -8,21 +8,39 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Created by umasuo on 17/3/7.
+ * Developer mapper.
  */
-public class DeveloperMapper {
+public final class DeveloperMapper {
 
-  public static List<DeveloperView> toModel(List<Developer> entities) {
+  /**
+   * Private default constructor.
+   */
+  private DeveloperMapper() {
+  }
+
+  /**
+   * Model list to view list.
+   *
+   * @param entities
+   * @return
+   */
+  public static List<DeveloperView> toView(List<Developer> entities) {
     List<DeveloperView> models = Lists.newArrayList();
 
-    Consumer<Developer> consumer = developer -> models.add(toModel(developer));
+    Consumer<Developer> consumer = developer -> models.add(toView(developer));
 
     entities.stream().forEach(consumer);
 
     return models;
   }
 
-  public static DeveloperView toModel(Developer developer) {
+  /**
+   * Model to view.
+   *
+   * @param developer
+   * @return
+   */
+  public static DeveloperView toView(Developer developer) {
     DeveloperView view = null;
     if (developer != null) {
       view = new DeveloperView();
@@ -38,7 +56,13 @@ public class DeveloperMapper {
     return view;
   }
 
-  public static Developer toEntity(DeveloperView developer) {
+  /**
+   * View to model.
+   *
+   * @param developer
+   * @return
+   */
+  public static Developer toModel(DeveloperView developer) {
     Developer model = null;
     if (developer != null) {
       model = new Developer();

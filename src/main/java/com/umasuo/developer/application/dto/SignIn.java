@@ -1,18 +1,13 @@
 package com.umasuo.developer.application.dto;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 /**
- * Created by umasuo on 17/2/10.
- * sign up model.
+ * Sign up model.
  */
-@Getter
-@Setter
 public class SignIn {
 
   /**
@@ -34,10 +29,51 @@ public class SignIn {
   @NotNull(message = "Password can not be null")
   private String password;
 
+  /**
+   * To string.
+   *
+   * @return
+   */
   @Override
   public String toString() {
     return "SignIn{"
-        + "email='" + email + '\''
-        + '}';
+      + "email='" + email + '\''
+      + '}';
+  }
+
+  /**
+   * Getter.
+   *
+   * @return
+   */
+  public String getEmail() {
+    return email;
+  }
+
+  /**
+   * Setter.
+   *
+   * @return
+   */
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  /**
+   * Getter.
+   *
+   * @return
+   */
+  public String getPassword() {
+    return password;
+  }
+
+  /**
+   * Setter.
+   *
+   * @return
+   */
+  public void setPassword(String password) {
+    this.password = password;
   }
 }

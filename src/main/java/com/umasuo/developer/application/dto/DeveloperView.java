@@ -3,12 +3,21 @@ package com.umasuo.developer.application.dto;
 import com.umasuo.developer.infrastructure.enums.AccountStatus;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
- * Created by umasuo on 17/3/7.
+ * Developer view.
  */
 @Data
-public class DeveloperView {
+public class DeveloperView implements Serializable {
 
+  /**
+   * Auto generated serial version uid.
+   */
+  private static final long serialVersionUID = 3911397336752429079L;
+  /**
+   * developer id.
+   */
   private String id;
 
   /**

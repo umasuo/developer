@@ -1,31 +1,26 @@
 package com.umasuo.developer.application.service;
 
-import com.umasuo.authentication.JwtUtil;
-import com.umasuo.authentication.Scope;
-import com.umasuo.authentication.Token;
 import com.umasuo.developer.application.dto.AuthStatus;
-import com.umasuo.developer.infrastructure.configuration.AppConfig;
+import com.umasuo.developer.application.dto.DeveloperSession;
 import com.umasuo.developer.infrastructure.util.RedisKeyUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * for check login status, developer account status.s
+ * For check login status, developer account status.s
  */
 @Service
 public class StatusService {
 
   /**
-   * logger.
+   * LOGGER.
    */
-  private final static Logger logger = LoggerFactory.getLogger(StatusService.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(StatusService.class);
 
   /**
    * redis ops. cache cluster should be used.
@@ -34,50 +29,30 @@ public class StatusService {
   private transient RedisTemplate redisTemplate;
 
   /**
-   * JWT(json web token) update
-   */
-  @Autowired
-  private transient JwtUtil jwtUtil;
-
-  /**
-   * JWT(json web token) update
-   */
-  @Autowired
-  private transient AppConfig config;
-
-  public static final long EXPIRE_TIME = 4 * 60 * 60 * 1000L;
-
-  /**
    * 检查用户的权限状态。
    * 1，检查ID与token中的ID是否一致
    * 2，检查用户是否登陆
    * 3，登陆是否在有效期内
    *
-   * @param id 开发者ID
+   * @param id       开发者ID
    * @param tokenStr 传入的token string
    * @return 权限状态
    */
   public AuthStatus checkAuthStatus(String id, String tokenStr) {
-    logger.debug("CheckSignInStatus: id: {}", id);
+    LOGGER.debug("CheckSignInStatus: id: {}", id);
     AuthStatus authStatus = new AuthStatus();
 
-    Token tokenInput = JwtUtil.parseToken(config.getSecret(), tokenStr);
-    if (tokenInput == null || !tokenInput.getSubjectId().equals(id)) {
-      //检查传入的token是否属于该开发者
-      authStatus.setLogin(false);
-      return authStatus;
-    }
     authStatus.setDeveloperId(id);
 
     String key = String.format(RedisKeyUtil.DEVELOPER_KEY_FORMAT, id);
-    Token token = (Token) redisTemplate.opsForHash().get(key, RedisKeyUtil.SIGN_IN_CACHE_KEY);
-    if (token == null) {
+    DeveloperSession session = (DeveloperSession) redisTemplate.opsForHash().get(key, RedisKeyUtil.DEVELOPER_SESSION_KEY);
+    if (session == null) {
       authStatus.setLogin(false);
       return authStatus;
     }
 
     //todo be careful, keep all machine in the same.
-    long lifeTime = token.getGenerateTime() + token.getExpiresIn();
+    long lifeTime = session.getLastActiveTime() + DeveloperSession.EXPIRE_IN;
     long curTime = System.currentTimeMillis();
     if (curTime > lifeTime) {
       authStatus.setLogin(false);
@@ -87,21 +62,13 @@ public class StatusService {
     authStatus.setLogin(true);
 
     // 设置过期时间
-    redisTemplate.expire(key, EXPIRE_TIME, TimeUnit.MILLISECONDS);
+    redisTemplate.expire(key, DeveloperSession.EXPIRE_IN, TimeUnit.MILLISECONDS);
 
-    token.setGenerateTime(curTime);
+    session.setLastActiveTime(curTime);
 
-    redisTemplate.boundHashOps(key).put(RedisKeyUtil.SIGN_IN_CACHE_KEY, token);
+    redisTemplate.boundHashOps(key).put(RedisKeyUtil.DEVELOPER_SESSION_KEY, session);
 
     return authStatus;
   }
 
-  /**
-   * check if the developer is login and has the right scope.
-   * this can only be accessed in internal net work.
-   */
-  public boolean checkSignInAndScope(String id, List<Scope> scopes) {
-    //TODO finish later.
-    return true;
-  }
 }

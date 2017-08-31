@@ -1,7 +1,5 @@
 package com.umasuo.developer.application.service;
 
-import static com.umasuo.developer.infrastructure.update.UpdateActionUtils.RESET_PASSWORD;
-
 import com.umasuo.developer.application.dto.DeveloperView;
 import com.umasuo.developer.application.dto.action.ResetPassword;
 import com.umasuo.developer.application.dto.mapper.DeveloperMapper;
@@ -11,7 +9,6 @@ import com.umasuo.developer.infrastructure.util.PasswordUtil;
 import com.umasuo.developer.infrastructure.util.RedisKeyUtil;
 import com.umasuo.exception.NotExistException;
 import com.umasuo.exception.ParametersException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +18,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.umasuo.developer.infrastructure.update.UpdateActionUtils.RESET_PASSWORD;
+
 /**
- * Created by Davis on 17/7/3.
+ * Developer application.
  */
 @Service(RESET_PASSWORD)
 public class DeveloperApplication {
@@ -30,31 +29,42 @@ public class DeveloperApplication {
   /**
    * Logger.
    */
-  private static final Logger LOG = LoggerFactory.getLogger(DeveloperApplication.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(DeveloperApplication.class);
 
+  /**
+   * Redis client.
+   */
   @Autowired
   private transient RedisTemplate redisTemplate;
 
+  /**
+   * Developer Service.
+   */
   @Autowired
   private transient DeveloperService developerService;
 
+  /**
+   * Reset password.
+   *
+   * @param resetRequest
+   */
   public void resetPassword(ResetPassword resetRequest) {
-    LOG.debug("Enter.");
+    LOGGER.debug("Enter.");
 
     String developerId = resetRequest.getDeveloperId();
-    String token = resetRequest.getToken();
 
     String key = String.format(RedisKeyUtil.RESET_KEY_FORMAT, developerId);
 
     String requestToken = (String) redisTemplate.opsForValue().get(key);
 
     if (StringUtils.isBlank(requestToken)) {
-      LOG.debug("Can not find reset password code for developer: {}.", developerId);
+      LOGGER.debug("Can not find reset password code for developer: {}.", developerId);
       throw new NotExistException("Reset password code not exist or expired");
     }
 
+    String token = resetRequest.getToken();
     if (!token.equals(requestToken)) {
-      LOG.debug("Reset password token is out of time or not exist.");
+      LOGGER.debug("Reset password token is out of time or not exist.");
       throw new ParametersException("Token not correct");
       // TODO: 17/7/5 返回一个验证码不对的跳转链接
     }
@@ -69,14 +79,19 @@ public class DeveloperApplication {
     // TODO: 17/7/5 返回一个成功的跳转链接
   }
 
+  /**
+   * Get all developers.
+   *
+   * @return
+   */
   public List<DeveloperView> getAllDevelopers() {
-    LOG.debug("Enter.");
+    LOGGER.debug("Enter.");
 
     List<Developer> developers = developerService.getAllDevelopers();
 
-    List<DeveloperView> result = DeveloperMapper.toModel(developers);
+    List<DeveloperView> result = DeveloperMapper.toView(developers);
 
-    LOG.debug("Exit. developer size: {}.", result.size());
+    LOGGER.debug("Exit. developer size: {}.", result.size());
 
     return result;
   }

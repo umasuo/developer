@@ -1,10 +1,10 @@
 package com.umasuo.developer.infrastructure.exception;
 
-import com.umasuo.developer.infrastructure.util.JsonUtils;
 import com.umasuo.exception.AlreadyExistException;
 import com.umasuo.exception.NotExistException;
 import com.umasuo.exception.PasswordErrorException;
 import com.umasuo.exception.handler.ExceptionHandler;
+import com.umasuo.util.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -17,13 +17,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by umasuo on 17/3/2.
+ * Developer exception handler.
  */
 @Component
 public class DeveloperExceptionHandler implements ExceptionHandler, HandlerExceptionResolver {
 
-  private static Logger logger = LoggerFactory.getLogger(DeveloperExceptionHandler.class);
+  /**
+   * Logger.
+   */
+  private static final Logger LOGGER = LoggerFactory.getLogger(DeveloperExceptionHandler.class);
 
+  /**
+   * Resolve exception.
+   * @param request
+   * @param response
+   * @param handler
+   * @param ex
+   * @return
+   */
   @Override
   public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
                                        Object handler, Exception ex) {
@@ -45,7 +56,7 @@ public class DeveloperExceptionHandler implements ExceptionHandler, HandlerExcep
         response.getWriter().print(JsonUtils.serialize(body));
       }
     } catch (IOException e) {
-      logger.error("failed to write response JSON", e);
+      LOGGER.error("failed to write response JSON", e);
       throw new IllegalStateException(e);
     }
   }

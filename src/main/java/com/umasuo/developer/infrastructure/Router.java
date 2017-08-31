@@ -1,7 +1,7 @@
 package com.umasuo.developer.infrastructure;
 
 /**
- * Created by umasuo on 17/3/7.
+ * Developer router.
  */
 public class Router {
   /**
@@ -39,7 +39,23 @@ public class Router {
    */
   public static final String DEVELOPER_SIGN_OUT = DEVELOPER_WITH_ID + "/signout";
 
+  /**
+   * verify developer after sign up.
+   */
   public static final String DEVELOPER_VERIFY = DEVELOPER_WITH_ID + "/verify";
 
+  /**
+   * Reset developer's password.
+   */
   public static final String DEVELOPER_RESET_PASSWORD = DEVELOPER_ROOT + "/reset-password";
+
+  /**
+   * Get all Developers.
+   */
+  public static final String DEVELOPER_GET_ALL = "/v1/admin/developers";
+
+  /**
+   * Count developers.
+   */
+  public static final String DEVELOPER_COUNT_ALL = "/v1/admin/developers/count";
 }

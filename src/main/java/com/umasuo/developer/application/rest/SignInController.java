@@ -15,16 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 /**
- * Created by umasuo on 17/3/7.
+ * Sign in controller.
  */
 @CrossOrigin
 @RestController
 public class SignInController {
 
   /**
-   * logger.
+   * LOGGER.
    */
-  private final static Logger logger = LoggerFactory.getLogger(SignInController.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(SignInController.class);
 
   /**
    * sign in service.
@@ -40,11 +40,11 @@ public class SignInController {
    */
   @PostMapping(value = Router.DEVELOPER_SIGN_IN)
   public SignInResult signIn(@RequestBody @Valid SignIn signIn) {
-    logger.info("SignIn: {}", signIn);
+    LOGGER.info("SignIn: {}", signIn);
 
     SignInResult result = signInService.signInWithEmail(signIn.getEmail(), signIn.getPassword());
 
-    logger.info("SignInResult: {}", result);
+    LOGGER.info("SignInResult: {}", result);
     return result;
   }
 }

@@ -1,20 +1,27 @@
 package com.umasuo.developer.infrastructure.util;
 
-import org.springframework.beans.factory.annotation.Value;
-
 /**
- * Created by Davis on 17/7/4.
+ * Redis key sets.
  */
 public class RedisKeyUtil {
 
+  /**
+   * Verify key format.
+   */
   public static final String VERIFY_KEY_FORMAT = "developer:%s:verify";
 
+  /**
+   * Reset key format.
+   */
   public static final String RESET_KEY_FORMAT = "developer:%s:reset";
 
+  /**
+   * Developer key format.
+   */
   public static final String DEVELOPER_KEY_FORMAT = "developer:%s";
 
   /**
    * the key in mapper which in cache.
    */
-  public final static String SIGN_IN_CACHE_KEY = "token";
+  public final static String DEVELOPER_SESSION_KEY = "session";
 }
