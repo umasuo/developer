@@ -1,11 +1,21 @@
 package com.umasuo.developer.application.dto.mapper;
 
-import org.springframework.mail.SimpleMailMessage;
+import com.aliyuncs.dm.model.v20151123.SingleSendMailRequest;
 
 /**
  * Mail message mapper.
  */
 public final class MailMessageMapper {
+
+  /**
+   * Send email.
+   */
+  private static final String ACCOUNT_NAME = "public@evacloud.cn";
+
+  /**
+   * Send name.
+   */
+  private static final String FROM_ALIAS = "伊娃云官方";
 
   /**
    * Private default constructor.
@@ -21,37 +31,17 @@ public final class MailMessageMapper {
    * @param message the message
    * @return the simple mail message
    */
-  public static SimpleMailMessage build(String email, String subject, String message) {
-    SimpleMailMessage mailMessage = new SimpleMailMessage();
-    mailMessage.setTo(email);
-    mailMessage.setSubject(subject);
-    mailMessage.setText(message);
-    return mailMessage;
-  }
+  public static SingleSendMailRequest build(String email, String subject, String message) {
+    SingleSendMailRequest request = new SingleSendMailRequest();
 
-  /**
-   * Create verify message.
-   *
-   * @param developerId
-   * @param verificationCode
-   * @return
-   */
-  public static String createVerifyMessage(String developerId, String verificationCode) {
-    // TODO: 17/7/3
-    String msg =
-      "http://localhost:8804/v1/developers/" + developerId + "/verify?code=" + verificationCode;
-    return msg;
-  }
+    request.setAccountName(ACCOUNT_NAME);
+    request.setFromAlias(FROM_ALIAS);
+    request.setAddressType(1);
+    request.setReplyToAddress(true);
+    request.setToAddress(email);
+    request.setSubject(subject);
+    request.setHtmlBody(message);
 
-  /**
-   * Create reset message.
-   *
-   * @param developerId
-   * @param resetToken
-   * @return
-   */
-  public static String createResetMessage(String developerId, String resetToken) {
-    // TODO: 17/7/10
-    return String.format("developerId: %s, token: %s", developerId, resetToken);
+    return request;
   }
 }

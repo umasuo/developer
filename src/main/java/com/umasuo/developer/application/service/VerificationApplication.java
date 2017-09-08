@@ -1,12 +1,13 @@
 package com.umasuo.developer.application.service;
 
-import com.umasuo.developer.application.dto.mapper.MailMessageMapper;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.domain.service.DeveloperService;
+import com.umasuo.developer.infrastructure.configuration.MailContentBuilder;
 import com.umasuo.developer.infrastructure.enums.AccountStatus;
 import com.umasuo.developer.infrastructure.util.RedisKeyUtil;
 import com.umasuo.exception.NotExistException;
 import com.umasuo.exception.ParametersException;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +66,12 @@ public class VerificationApplication {
   private transient DeveloperService developerService;
 
   /**
+   * Mail content builder.
+   */
+  @Autowired
+  private transient MailContentBuilder mailContentBuilder;
+
+  /**
    * Mail sender.
    */
   @Autowired
@@ -83,7 +90,7 @@ public class VerificationApplication {
       .set(String.format(RedisKeyUtil.VERIFY_KEY_FORMAT, developerId), verificationCode,
         VERIFY_EXPIRE_TIME, TimeUnit.MILLISECONDS);
 
-    String message = MailMessageMapper.createVerifyMessage(developerId, verificationCode);
+    String message = mailContentBuilder.getVerifyContent(developerId, verificationCode);
 
     mailSender.send(email, VERIFY_SUBJECT, message);
 
@@ -132,7 +139,7 @@ public class VerificationApplication {
       set(String.format(RedisKeyUtil.RESET_KEY_FORMAT, developer.getId()), resetToken,
         RESET_EXPIRE_TIME, TimeUnit.MILLISECONDS);
 
-    String message = MailMessageMapper.createResetMessage(developer.getId(), resetToken);
+    String message = mailContentBuilder.getResetContent(developer.getId(), resetToken);
 
     mailSender.send(email, RESET_SUBJECT, message);
 

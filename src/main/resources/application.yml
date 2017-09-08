@@ -46,3 +46,9 @@ user:
 product:
   service:
     uri: http://localhost:8805/
+
+aliyun:
+  eamil:
+    region: cn-hangzhou
+    accessKeyId: LTAI3U62EgqWcMP8
+    secret: 4DFl1LsQ2329nys9KzWF7lK7E4SpMm

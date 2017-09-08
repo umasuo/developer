@@ -26,4 +26,8 @@ dependencies {
     compile('org.projectlombok:lombok:1.16.12')
 
     compile("com.umasuo:commons:0.3")
+
+    // aliyun email sdk
+    compile("com.aliyun:aliyun-java-sdk-core:3.0.0")
+    compile("com.aliyun:aliyun-java-sdk-dm:3.1.0")
 }
