@@ -50,5 +50,5 @@ product:
 aliyun:
   eamil:
     region: cn-hangzhou
-    accessKeyId: LTAI3U62EgqWcMP8
-    secret: 4DFl1LsQ2329nys9KzWF7lK7E4SpMm
+    accessKeyId: access key
+    secret: secret

@@ -55,16 +55,16 @@ public class VerifyController {
     try {
       verificationApplication.verifyEmail(developerId, code);
       // TODO: 17/7/6 跳转到成功页面
-      redirectView = new ModelAndView("redirect:http://www.baidu.com");
+      redirectView = new ModelAndView("redirect:http://developer.evacloud.cn/email-varify?result=success");
 
     } catch (NotExistException ex) {
       LOGGER.debug("Developer not exist.");
       // TODO: 17/7/6 开发者不存在
-      redirectView = new ModelAndView("redirect:http://www.jd.com");
+      redirectView = new ModelAndView("redirect:http://developer.evacloud.cn/email-varify?result=failed");
     } catch (ParametersException pEx) {
       LOGGER.debug("Verify code not match.");
       // TODO: 17/7/6 验证不通过，验证码过期或者不对
-      redirectView = new ModelAndView("redirect:http://www.google.com");
+      redirectView = new ModelAndView("redirect:http://developer.evacloud.cn/email-varify?result=failed");
     }
 
     LOGGER.info("Exit.");
