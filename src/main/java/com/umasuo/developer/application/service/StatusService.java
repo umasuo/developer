@@ -45,7 +45,8 @@ public class StatusService {
     authStatus.setDeveloperId(id);
 
     String key = String.format(RedisKeyUtil.DEVELOPER_KEY_FORMAT, id);
-    DeveloperSession session = (DeveloperSession) redisTemplate.opsForHash().get(key, RedisKeyUtil.DEVELOPER_SESSION_KEY);
+    DeveloperSession session =
+        (DeveloperSession) redisTemplate.opsForHash().get(key, RedisKeyUtil.DEVELOPER_SESSION_KEY);
     if (session == null) {
       authStatus.setLogin(false);
       return authStatus;

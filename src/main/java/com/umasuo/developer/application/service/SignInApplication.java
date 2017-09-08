@@ -85,7 +85,7 @@ public class SignInApplication {
     LOGGER.debug("Enter.");
     //todo cache key 的设置
     //cache the sign in result
-    String key = String.format(RedisKeyUtil.DEVELOPER_KEY_FORMAT, token);
+    String key = String.format(RedisKeyUtil.DEVELOPER_KEY_FORMAT, developerView.getId());
     DeveloperSession session = new DeveloperSession(developerView, token);
     redisTemplate.boundHashOps(key).put(RedisKeyUtil.DEVELOPER_SESSION_KEY, session);
     redisTemplate.expire(key, EXPIRE_TIME, TimeUnit.MILLISECONDS);
