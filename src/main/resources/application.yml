@@ -48,7 +48,7 @@ product:
     uri: http://localhost:8805/
 
 aliyun:
-  eamil:
+  email:
     region: cn-hangzhou
     accessKeyId: access key
     secret: secret

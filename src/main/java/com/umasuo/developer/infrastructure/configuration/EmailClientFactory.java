@@ -28,19 +28,19 @@ public class EmailClientFactory {
   /**
    * The region.
    */
-  @Value("${aliyun.eamil.region:cn-hangzhou}")
+  @Value("${aliyun.email.region:cn-hangzhou}")
   private String region;
 
   /**
    * The access key.
    */
-  @Value("${aliyun.eamil.accessKeyId}")
+  @Value("${aliyun.email.accessKeyId}")
   private String accessKeyId;
 
   /**
    * The secret.
    */
-  @Value("${aliyun.eamil.secret}")
+  @Value("${aliyun.email.secret}")
   private String secret;
 
   /**
