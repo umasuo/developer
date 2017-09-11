@@ -3,6 +3,7 @@ package com.umasuo.developer.application.service;
 import com.umasuo.developer.application.dto.AuthStatus;
 import com.umasuo.developer.application.dto.DeveloperSession;
 import com.umasuo.developer.infrastructure.util.RedisKeyUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +13,15 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.TimeUnit;
 
 /**
- * For check login status, developer account status.s
+ * For check login status, developer account status.
  */
 @Service
-public class StatusService {
+public class StatusApplication {
 
   /**
    * LOGGER.
    */
-  private final static Logger LOGGER = LoggerFactory.getLogger(StatusService.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(StatusApplication.class);
 
   /**
    * redis ops. cache cluster should be used.
@@ -34,7 +35,7 @@ public class StatusService {
    * 2，检查用户是否登陆
    * 3，登陆是否在有效期内
    *
-   * @param id       开发者ID
+   * @param id 开发者ID
    * @param tokenStr 传入的token string
    * @return 权限状态
    */
@@ -47,7 +48,13 @@ public class StatusService {
     String key = String.format(RedisKeyUtil.DEVELOPER_KEY_FORMAT, id);
     DeveloperSession session =
         (DeveloperSession) redisTemplate.opsForHash().get(key, RedisKeyUtil.DEVELOPER_SESSION_KEY);
+
     if (session == null) {
+      authStatus.setLogin(false);
+      return authStatus;
+    }
+
+    if (!tokenStr.equals(session.getToken())) {
       authStatus.setLogin(false);
       return authStatus;
     }
@@ -71,5 +78,4 @@ public class StatusService {
 
     return authStatus;
   }
-
 }

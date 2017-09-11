@@ -1,5 +1,7 @@
 package com.umasuo.developer.application.service;
 
+import static com.umasuo.developer.infrastructure.update.UpdateActionUtils.RESET_PASSWORD;
+
 import com.umasuo.developer.application.dto.DeveloperView;
 import com.umasuo.developer.application.dto.action.ResetPassword;
 import com.umasuo.developer.application.dto.mapper.DeveloperMapper;
@@ -9,6 +11,7 @@ import com.umasuo.developer.infrastructure.util.PasswordUtil;
 import com.umasuo.developer.infrastructure.util.RedisKeyUtil;
 import com.umasuo.exception.NotExistException;
 import com.umasuo.exception.ParametersException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +20,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static com.umasuo.developer.infrastructure.update.UpdateActionUtils.RESET_PASSWORD;
 
 /**
  * Developer application.
@@ -45,8 +46,6 @@ public class DeveloperApplication {
 
   /**
    * Reset password.
-   *
-   * @param resetRequest
    */
   public void resetPassword(ResetPassword resetRequest) {
     LOGGER.debug("Enter.");
@@ -66,7 +65,6 @@ public class DeveloperApplication {
     if (!token.equals(requestToken)) {
       LOGGER.debug("Reset password token is out of time or not exist.");
       throw new ParametersException("Token not correct");
-      // TODO: 17/7/5 返回一个验证码不对的跳转链接
     }
 
     Developer developer = developerService.get(developerId);
@@ -76,13 +74,10 @@ public class DeveloperApplication {
     developerService.save(developer);
 
     redisTemplate.delete(key);
-    // TODO: 17/7/5 返回一个成功的跳转链接
   }
 
   /**
    * Get all developers.
-   *
-   * @return
    */
   public List<DeveloperView> getAllDevelopers() {
     LOGGER.debug("Enter.");

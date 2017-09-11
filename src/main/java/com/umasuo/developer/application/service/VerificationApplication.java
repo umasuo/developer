@@ -5,7 +5,6 @@ import com.umasuo.developer.domain.service.DeveloperService;
 import com.umasuo.developer.infrastructure.configuration.MailContentBuilder;
 import com.umasuo.developer.infrastructure.enums.AccountStatus;
 import com.umasuo.developer.infrastructure.util.RedisKeyUtil;
-import com.umasuo.exception.NotExistException;
 import com.umasuo.exception.ParametersException;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -79,7 +78,6 @@ public class VerificationApplication {
 
   /**
    * 发送验证邮件。
-   * 使用Async实现异步调用，之后考虑使用其它方法实现。
    */
   public void sendVerificationEmail(String developerId, String email) {
     LOG.debug("Enter. developerId: {}, email: {}.", developerId, email);
@@ -98,29 +96,23 @@ public class VerificationApplication {
   }
 
   /**
-   * Verify email
+   * Resend verify email.
    *
-   * @param developerId
-   * @param code
+   * @param id
    */
-  public void verifyEmail(String developerId, String code) {
-    LOG.debug("Enter. developerId: {}, verificationCode: {}.", developerId, code);
-    Developer developer = developerService.get(developerId);
-    if (developer == null) {
-      LOG.debug("Can not find the developer: {}.", developerId);
-      throw new NotExistException("Developer not exist");
+  public void resendVerifyEmail(String id) {
+    LOG.debug("Enter. id: {}.", id);
+
+    Developer developer = developerService.get(id);
+
+    if (developer.getStatus().equals(AccountStatus.VERIFIED)) {
+      LOG.debug("Developer has bean verified, do not need to verify again.");
+      return;
     }
 
-    String key = String.format(RedisKeyUtil.VERIFY_KEY_FORMAT, developerId);
-    String requestCode = redisTemplate.opsForValue().get(key).toString();
-    if (!code.equals(requestCode)) {
-      LOG.debug("VerificationCode is not match");
-      throw new ParametersException("VerificationCode is not match");
-    }
-    developer.setStatus(AccountStatus.VERIFIED);
-    developerService.save(developer);
+    sendVerificationEmail(id, developer.getEmail());
 
-    redisTemplate.delete(key);
+    LOG.debug("Exit.");
   }
 
   /**
@@ -136,37 +128,35 @@ public class VerificationApplication {
     String resetToken = RandomStringUtils.randomAlphanumeric(CODE_LENGTH);
 
     redisTemplate.opsForValue().
-      set(String.format(RedisKeyUtil.RESET_KEY_FORMAT, developer.getId()), resetToken,
-        RESET_EXPIRE_TIME, TimeUnit.MILLISECONDS);
+        set(String.format(RedisKeyUtil.RESET_KEY_FORMAT, developer.getId()), resetToken,
+            RESET_EXPIRE_TIME, TimeUnit.MILLISECONDS);
 
     String message = mailContentBuilder.getResetContent(developer.getId(), resetToken);
 
     mailSender.send(email, RESET_SUBJECT, message);
-
   }
 
   /**
-   * Resend verify email.
+   * Verify email
    *
-   * @param id
+   * @param developerId
+   * @param code
    */
-  public void resendVerifyEmail(String id) {
-    LOG.debug("Enter. id: {}.", id);
+  public void verifyEmail(String developerId, String code) {
+    LOG.debug("Enter. developerId: {}, verificationCode: {}.", developerId, code);
 
-    Developer developer = developerService.get(id);
+    String key = String.format(RedisKeyUtil.VERIFY_KEY_FORMAT, developerId);
+    String requestCode = redisTemplate.opsForValue().get(key).toString();
 
-    if (developer == null) {
-      LOG.debug("Can not find developer: {}.", id);
-      throw new NotExistException("Developer not exist");
+    if (!code.equals(requestCode)) {
+      LOG.debug("VerificationCode is not match");
+      throw new ParametersException("VerificationCode is not match");
     }
 
-    if (developer.getStatus().equals(AccountStatus.VERIFIED)) {
-      LOG.debug("Developer has bean verified, do not need to verify again.");
-      return;
-    }
+    Developer developer = developerService.get(developerId);
+    developer.setStatus(AccountStatus.VERIFIED);
+    developerService.save(developer);
 
-    sendVerificationEmail(id, developer.getEmail());
-
-    LOG.debug("Exit.");
+    redisTemplate.delete(key);
   }
 }

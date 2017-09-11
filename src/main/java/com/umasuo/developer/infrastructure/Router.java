@@ -52,10 +52,10 @@ public class Router {
   /**
    * Get all Developers.
    */
-  public static final String DEVELOPER_GET_ALL = "/v1/admin/developers";
+  public static final String ADMIN_DEVELOPER_ROOT = "/v1/admin/developers";
 
   /**
    * Count developers.
    */
-  public static final String DEVELOPER_COUNT_ALL = "/v1/admin/developers/count";
+  public static final String ADMIN_DEVELOPER_COUNT = "/v1/admin/developers/count";
 }

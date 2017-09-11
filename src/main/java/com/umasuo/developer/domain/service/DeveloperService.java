@@ -11,6 +11,7 @@ import com.umasuo.developer.infrastructure.util.PasswordUtil;
 import com.umasuo.exception.AlreadyExistException;
 import com.umasuo.exception.ConflictException;
 import com.umasuo.exception.NotExistException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,12 +62,16 @@ public class DeveloperService {
    * @return created developer
    */
   public Developer create(String email, String password) {
-    LOGGER.debug("CreateDeveloper: email:{}", email);
+    LOGGER.debug("email:{}", email);
+
     Developer developer = this.repository.findOneByEmail(email);
+
     if (developer != null) {
       throw new AlreadyExistException("Developer already existing.");
     }
+
     developer = new Developer();
+
     developer.setEmail(email);
     developer.setStatus(AccountStatus.UNVERIFIED);
     developer.setOpenable(false);//默认不公开任何数据
@@ -78,14 +83,40 @@ public class DeveloperService {
   }
 
   /**
-   * getAllForApplicant one developer by it's id.
+   * Get one developer by it's id.
    *
    * @param id developer id.
    * @return existing developer.
    */
   public Developer get(String id) {
-    LOGGER.debug("GetDeveloper: id: {}", id);
-    return this.repository.findOne(id);
+    LOGGER.debug("Enter. developerId: {}.", id);
+
+    Developer developer = repository.findOne(id);
+
+    if (developer == null) {
+      LOGGER.debug("Can not find developer: {}.", id);
+      throw new NotExistException("Developer not exist");
+    }
+
+    LOGGER.debug("Exit.");
+
+    return developer;
+  }
+
+  /**
+   * Check if developer exist.
+   *
+   * @param id the developerId
+   * @return boolean
+   */
+  public boolean exists(String id) {
+    LOGGER.debug("Enter. developerId: {}.", id);
+
+    boolean result = repository.exists(id);
+
+    LOGGER.debug("Exit. developer: {} exist? {}", id, result);
+
+    return result;
   }
 
   /**

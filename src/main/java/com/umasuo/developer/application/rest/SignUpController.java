@@ -1,8 +1,9 @@
 package com.umasuo.developer.application.rest;
 
 import com.umasuo.developer.application.dto.SignIn;
-import com.umasuo.developer.application.service.SignUpService;
+import com.umasuo.developer.application.service.SignUpApplication;
 import com.umasuo.developer.infrastructure.Router;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,27 +22,23 @@ import javax.validation.Valid;
 public class SignUpController {
 
   /**
-   * LOGGER.
+   * Logger.
    */
-  private final static Logger LOGGER = LoggerFactory.getLogger(SignInController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(SignUpController.class);
 
   /**
-   * sign in service.
+   * sign in application.
    */
   @Autowired
-  private transient SignUpService signUpService;
+  private transient SignUpApplication signUpApplication;
 
   /**
    * sign up with email and password.
-   *
-   * @param signUp
    */
   @PostMapping(value = Router.DEVELOPER_SIGN_UP)
   public void signUp(@RequestBody @Valid SignIn signUp) {
-    LOGGER.info("SignUp: {}", signUp);
+    LOGGER.info("Developer email: {}", signUp.getEmail());
 
-    //TODO 需要添加用户验证
-    signUpService.signUp(signUp.getEmail(), signUp.getPassword());
+    signUpApplication.signUp(signUp.getEmail(), signUp.getPassword());
   }
-
 }

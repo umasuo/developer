@@ -9,6 +9,7 @@ import com.umasuo.developer.domain.service.DeveloperService;
 import com.umasuo.developer.infrastructure.util.PasswordUtil;
 import com.umasuo.developer.infrastructure.util.RedisKeyUtil;
 import com.umasuo.exception.PasswordErrorException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,9 @@ public class SignInApplication {
   private transient RedisTemplate redisTemplate;
 
   /**
-   * login with email and password.
+   * Sign in with email and password.
    *
-   * @param email    String
+   * @param email String
    * @param password String
    * @return LoginResult
    */
@@ -78,17 +79,19 @@ public class SignInApplication {
    * cache sign in status to cache.
    * each developer has an mapper in cache for keep status data.
    *
-   * @param token         developer id
-   * @param developerView
+   * @param token developer id
    */
   private void cacheSignInStatus(DeveloperView developerView, String token) {
-    LOGGER.debug("Enter.");
-    //todo cache key 的设置
-    //cache the sign in result
+    LOGGER.debug("Enter. developerId: {}.", developerView.getId());
+
     String key = String.format(RedisKeyUtil.DEVELOPER_KEY_FORMAT, developerView.getId());
+
     DeveloperSession session = new DeveloperSession(developerView, token);
+
     redisTemplate.boundHashOps(key).put(RedisKeyUtil.DEVELOPER_SESSION_KEY, session);
+
     redisTemplate.expire(key, EXPIRE_TIME, TimeUnit.MILLISECONDS);
+
     LOGGER.debug("Exit.");
   }
 }

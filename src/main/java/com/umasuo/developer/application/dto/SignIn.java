@@ -31,20 +31,16 @@ public class SignIn {
 
   /**
    * To string.
-   *
-   * @return
    */
   @Override
   public String toString() {
     return "SignIn{"
-      + "email='" + email + '\''
-      + '}';
+        + "email='" + email + '\''
+        + '}';
   }
 
   /**
    * Getter.
-   *
-   * @return
    */
   public String getEmail() {
     return email;
@@ -52,8 +48,6 @@ public class SignIn {
 
   /**
    * Setter.
-   *
-   * @return
    */
   public void setEmail(String email) {
     this.email = email;
@@ -61,8 +55,6 @@ public class SignIn {
 
   /**
    * Getter.
-   *
-   * @return
    */
   public String getPassword() {
     return password;
@@ -70,8 +62,6 @@ public class SignIn {
 
   /**
    * Setter.
-   *
-   * @return
    */
   public void setPassword(String password) {
     this.password = password;

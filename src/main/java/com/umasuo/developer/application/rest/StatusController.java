@@ -1,7 +1,7 @@
 package com.umasuo.developer.application.rest;
 
 import com.umasuo.developer.application.dto.AuthStatus;
-import com.umasuo.developer.application.service.StatusService;
+import com.umasuo.developer.application.service.StatusApplication;
 import com.umasuo.developer.infrastructure.Router;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class StatusController {
    * status service.
    */
   @Autowired
-  private transient StatusService statusService;
+  private transient StatusApplication statusApplication;
 
   /**
    * 检查开发者权限：是否已经登陆，是否拥有相应权限，token与ID是否对应等。
@@ -45,7 +45,7 @@ public class StatusController {
                                   @RequestParam @Valid @NotNull String token) {
     LOGGER.info("Enter. developerId: {}, tokenStr: {}.", id, token);
 
-    AuthStatus status = statusService.checkAuthStatus(id, token);
+    AuthStatus status = statusApplication.checkAuthStatus(id, token);
 
     LOGGER.info("Exit. authStatus: {}", status);
     return status;
