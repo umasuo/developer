@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 /**
  * Mail sender.
  */
-@Service(value = "developerMailSender")
+@Service(value = "mailSender")
 public class MailSender {
 
   /**
@@ -24,7 +24,7 @@ public class MailSender {
   private static final Logger LOGGER = LoggerFactory.getLogger(MailSender.class);
 
   /**
-   * Java mail sender.
+   * Aliyun mail sender.
    */
   @Autowired
   private transient IAcsClient emailClient;

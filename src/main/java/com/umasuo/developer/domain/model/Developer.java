@@ -1,8 +1,10 @@
 package com.umasuo.developer.domain.model;
 
 import com.umasuo.developer.infrastructure.enums.AccountStatus;
+
 import lombok.Getter;
 import lombok.Setter;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -85,19 +87,17 @@ public class Developer {
 
   /**
    * To string method.
-   *
-   * @return
    */
   @Override
   public String toString() {
     return "Developer{"
-      + "id='" + id + '\''
-      + ", createdAt=" + createdAt
-      + ", lastModifiedAt=" + lastModifiedAt
-      + ", version=" + version
-      + ", email='" + email + '\''
-      + ", phone='" + phone + '\''
-      + ", openable='" + openable + '\''
-      + '}';
+        + "id='" + id + '\''
+        + ", createdAt=" + createdAt
+        + ", lastModifiedAt=" + lastModifiedAt
+        + ", version=" + version
+        + ", email='" + email + '\''
+        + ", phone='" + phone + '\''
+        + ", openable='" + openable + '\''
+        + '}';
   }
 }

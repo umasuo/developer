@@ -59,7 +59,7 @@ public class StatusApplication {
       return authStatus;
     }
 
-    //todo be careful, keep all machine in the same.
+    // Be careful, keep all machine in the same.
     long lifeTime = session.getLastActiveTime() + DeveloperSession.EXPIRE_IN;
     long curTime = System.currentTimeMillis();
     if (curTime > lifeTime) {

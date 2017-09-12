@@ -1,6 +1,7 @@
 package com.umasuo.developer.infrastructure.validator;
 
 import com.umasuo.exception.ConflictException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,13 +24,13 @@ public final class VersionValidator {
   /**
    * Validate.
    *
-   * @param entityVersion the entity version
-   * @param version       the version
+   * @param requestVersion the request version
+   * @param realVersion the real version
    */
-  public static void validate(Integer entityVersion, Integer version) {
-    if (!version.equals(entityVersion)) {
-      LOGGER.debug("Version not match, request version: {}, entity version: {}.",
-        version, entityVersion);
+  public static void validate(Integer requestVersion, Integer realVersion) {
+    if (!realVersion.equals(requestVersion)) {
+      LOGGER.debug("Version not match, request version: {}, real version: {}.",
+          requestVersion, realVersion);
       throw new ConflictException("Version not match");
     }
   }
