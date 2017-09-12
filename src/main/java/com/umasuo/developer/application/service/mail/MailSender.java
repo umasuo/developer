@@ -1,4 +1,4 @@
-package com.umasuo.developer.application.service;
+package com.umasuo.developer.application.service.mail;
 
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.dm.model.v20151123.SingleSendMailRequest;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 /**
  * Mail sender.
  */
-@Service(value = "mailSender")
+@Service
 public class MailSender {
 
   /**

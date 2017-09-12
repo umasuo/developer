@@ -1,8 +1,9 @@
 package com.umasuo.developer.application.service;
 
+import com.umasuo.developer.application.service.mail.MailContentBuilder;
+import com.umasuo.developer.application.service.mail.MailSender;
 import com.umasuo.developer.domain.model.Developer;
 import com.umasuo.developer.domain.service.DeveloperService;
-import com.umasuo.developer.infrastructure.configuration.MailContentBuilder;
 import com.umasuo.developer.infrastructure.enums.AccountStatus;
 import com.umasuo.developer.infrastructure.util.RedisKeyUtil;
 import com.umasuo.exception.ParametersException;

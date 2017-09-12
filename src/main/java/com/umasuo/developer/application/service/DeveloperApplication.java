@@ -1,7 +1,5 @@
 package com.umasuo.developer.application.service;
 
-import static com.umasuo.developer.infrastructure.update.UpdateActionUtils.RESET_PASSWORD;
-
 import com.umasuo.developer.application.dto.DeveloperView;
 import com.umasuo.developer.application.dto.action.ResetPassword;
 import com.umasuo.developer.application.dto.mapper.DeveloperMapper;
@@ -24,7 +22,7 @@ import java.util.List;
 /**
  * Developer application.
  */
-@Service(RESET_PASSWORD)
+@Service
 public class DeveloperApplication {
 
   /**

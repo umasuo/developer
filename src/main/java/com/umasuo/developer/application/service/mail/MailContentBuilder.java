@@ -1,4 +1,4 @@
-package com.umasuo.developer.infrastructure.configuration;
+package com.umasuo.developer.application.service.mail;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;

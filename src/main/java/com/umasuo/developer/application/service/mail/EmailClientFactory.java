@@ -1,4 +1,4 @@
-package com.umasuo.developer.infrastructure.configuration;
+package com.umasuo.developer.application.service.mail;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
